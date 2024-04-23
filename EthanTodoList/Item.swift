@@ -10,9 +10,15 @@ import SwiftData
 
 @Model
 final class Item {
-    var timestamp: Date
+    var order: Int
+    var name: String
+    var dueDate: Date
+    var isForSchool: Bool
     
-    init(timestamp: Date) {
-        self.timestamp = timestamp
+    init(order: Int, name: String, dueDate: Date, isForSchool: Bool) {
+        self.order = order
+        self.name = name
+        self.dueDate = dueDate
+        self.isForSchool = isForSchool
     }
 }

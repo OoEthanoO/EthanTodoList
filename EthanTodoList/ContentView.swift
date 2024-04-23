@@ -11,36 +11,82 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    @State private var showingAddTask = false
+    @State private var newTaskTitle = ""
+    @State private var newTaskDueDate = Date()
+    @State private var newTaskForSchool = true
+    
+    private let itemFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        return formatter
+    }()
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+        List {
+            ForEach(items.sorted(by: sortByOrder)){ item in
+                VStack(alignment: .leading) {
+                    Text("\(item.order): \(item.name)")
+                        .font(.headline)
+                        .foregroundStyle(item.isForSchool ? Color.red : Color.black)
+                    Text("\(itemFormatter.string(from: item.dueDate))")
+                        .font(.subheadline)
                 }
             }
-        } detail: {
-            Text("Select an item")
+            .onMove(perform: move)
+        }
+        HStack {
+            Button(action: {
+                self.showingAddTask = true
+            }) {
+                Text("Add Task")
+            }
+            .sheet(isPresented: $showingAddTask) {
+                VStack {
+                    Text("New Task")
+                        .font(.title)
+                        .bold()
+                        .padding()
+                    
+                    TextField("Task Title", text: $newTaskTitle)
+                        .padding()
+                    
+                    DatePicker("Due Date", selection: $newTaskDueDate, displayedComponents: .date)
+                        .padding()
+                    
+                    Toggle(isOn: $newTaskForSchool) {
+                        Text("For school")
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        self.showingAddTask = false
+                        addItem()
+                    }) {
+                        Text("Add Task")
+                    }
+                }
+                .padding()
+                .frame(width: 500, height: 400)
+            }
+            .padding()
+            
+            Button("Remove Task") {
+                deleteItems(offsets: IndexSet(integer: items.count - 1))
+            }
+            .padding()
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
+            let newItem = Item(order: items.count, name: newTaskTitle, dueDate: newTaskDueDate, isForSchool: newTaskForSchool)
             modelContext.insert(newItem)
+            newTaskTitle = ""
+            newTaskDueDate = Date()
+            newTaskForSchool = true
         }
     }
 
@@ -50,6 +96,39 @@ struct ContentView: View {
                 modelContext.delete(items[index])
             }
         }
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        withAnimation {
+            let sourceIndex = source.first!
+            var sourceItem: Item?
+            for item in items {
+                if item.order == sourceIndex {
+                    sourceItem = item
+                    break
+                }
+            }
+            if sourceIndex < destination {
+                for item in items {
+                    if item.order < destination && item.order > sourceIndex {
+                        item.order -= 1
+                    }
+                }
+                sourceItem?.order = destination - 1
+            } else if sourceIndex > destination {
+                for item in items {
+                    if item.order >=
+                        destination && item.order < sourceIndex {
+                        item.order += 1
+                    }
+                }
+                sourceItem?.order = destination
+            }
+        }
+    }
+    
+    func sortByOrder(item1: Item, item2: Item) -> Bool {
+        return item1.order <= item2.order
     }
 }
 
