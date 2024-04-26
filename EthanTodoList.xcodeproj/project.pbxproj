@@ -12,6 +12,8 @@
 		8106F8812BD680F0000F1B7C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8106F8802BD680F0000F1B7C /* Item.swift */; };
 		8106F8832BD680F1000F1B7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8106F8822BD680F1000F1B7C /* Assets.xcassets */; };
 		8106F8862BD680F1000F1B7C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8106F8852BD680F1000F1B7C /* Preview Assets.xcassets */; };
+		810999112BDAF26F0012C5BD /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810999102BDAF26F0012C5BD /* CustomDatePicker.swift */; };
+		81AE6ABF2BDAE3A500E300E9 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		8106F8822BD680F1000F1B7C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8106F8852BD680F1000F1B7C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8106F8872BD680F1000F1B7C /* EthanTodoList.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EthanTodoList.entitlements; sourceTree = "<group>"; };
+		810999102BDAF26F0012C5BD /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
+		81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 				8106F8822BD680F1000F1B7C /* Assets.xcassets */,
 				8106F8872BD680F1000F1B7C /* EthanTodoList.entitlements */,
 				8106F8842BD680F1000F1B7C /* Preview Content */,
+				81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */,
+				810999102BDAF26F0012C5BD /* CustomDatePicker.swift */,
 			);
 			path = EthanTodoList;
 			sourceTree = "<group>";
@@ -142,9 +148,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				810999112BDAF26F0012C5BD /* CustomDatePicker.swift in Sources */,
 				8106F87F2BD680F0000F1B7C /* ContentView.swift in Sources */,
 				8106F8812BD680F0000F1B7C /* Item.swift in Sources */,
 				8106F87D2BD680F0000F1B7C /* EthanTodoListApp.swift in Sources */,
+				81AE6ABF2BDAE3A500E300E9 /* ItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

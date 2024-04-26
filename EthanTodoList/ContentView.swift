@@ -15,24 +15,11 @@ struct ContentView: View {
     @State private var newTaskTitle = ""
     @State private var newTaskDueDate = Date()
     @State private var newTaskForSchool = true
-    
-    private let itemFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .none
-        return formatter
-    }()
 
     var body: some View {
         List {
             ForEach(items.sorted(by: sortByOrder)){ item in
-                VStack(alignment: .leading) {
-                    Text("\(item.order): \(item.name)")
-                        .font(.headline)
-                        .foregroundStyle(item.isForSchool ? Color.red : Color.black)
-                    Text("\(itemFormatter.string(from: item.dueDate))")
-                        .font(.subheadline)
-                }
+                ItemView(item: item, dueDate: item.dueDate)
             }
             .onMove(perform: move)
         }
@@ -72,11 +59,6 @@ struct ContentView: View {
                 .frame(width: 500, height: 400)
             }
             .padding()
-            
-            Button("Remove Task") {
-                deleteItems(offsets: IndexSet(integer: items.count - 1))
-            }
-            .padding()
         }
     }
 
@@ -87,14 +69,6 @@ struct ContentView: View {
             newTaskTitle = ""
             newTaskDueDate = Date()
             newTaskForSchool = true
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
         }
     }
     
