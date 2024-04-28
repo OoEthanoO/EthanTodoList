@@ -16,12 +16,19 @@ private let itemFormatter: DateFormatter = {
 
 struct CustomDatePicker: View {
     @Binding var date: Date
+    @Binding var isCompleted: Bool
+    
     @State private var showingDatePicker = false
+    
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         Text(itemFormatter.string(from: date))
+            .foregroundStyle(isCompleted ? .gray : (colorScheme == .dark ? .white : .black))
             .onTapGesture {
-                self.showingDatePicker = true
+                if !isCompleted {
+                    self.showingDatePicker = true
+                }
             }
             .popover(isPresented: $showingDatePicker) {
                 DatePicker("Select Date", selection: $date, displayedComponents: .date)

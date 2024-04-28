@@ -14,11 +14,13 @@ final class Item {
     var name: String
     var dueDate: Date
     var isForSchool: Bool
+    var isCompleted: Bool
     
-    init(order: Int, name: String, dueDate: Date, isForSchool: Bool) {
+    init(order: Int, name: String, dueDate: Date, isForSchool: Bool, isCompleted: Bool) {
         self.order = order
         self.name = name
         self.dueDate = dueDate
         self.isForSchool = isForSchool
+        self.isCompleted = isCompleted
     }
 }
