@@ -10,13 +10,16 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    
     @Query private var items: [Item]
+    
     @State private var showingAddTask = false
     @State private var newTaskTitle = ""
     @State private var newTaskDueDate = Date()
     @State private var newTaskForSchool = true
     @State private var showAlert = false
     @State private var nextTask = ""
+    @State var lastDeletedItem: Item?
 
     var body: some View {
         List {
@@ -102,6 +105,10 @@ struct ContentView: View {
             .alert(isPresented: $showAlert) {
                 Alert(title: Text("Next Task"), message: Text(nextTask), dismissButton: .default(Text("Got it!")))
             }
+        }
+        .keyboardShortcut("z", modifiers: .command)
+        .onReceive(NotificationCenter.default.publisher(for: NSUndoManager.undoCheckpointNotification)) { _ in
+            undoDelete()
         }
     }
 

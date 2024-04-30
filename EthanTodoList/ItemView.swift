@@ -92,7 +92,9 @@ struct ItemView: View {
         withAnimation {
             for item in items {
                 if item.order == order {
+                    ContentView().lastDeletedItem = item
                     modelContext.delete(item)
+                    break
                 } else if item.order > order {
                     item.order -= 1
                 }
