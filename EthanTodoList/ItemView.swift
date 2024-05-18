@@ -17,6 +17,8 @@ struct ItemView: View {
     @State var isEditing = false
     @State var isCompleted: Bool
     @State var isForSchool: Bool
+    @State var contentView: ContentView
+    @State var order: Int
     
     @Query private var items: [Item]
     
@@ -25,12 +27,14 @@ struct ItemView: View {
     
     @FocusState private var isNameFieldFocused: Bool
     
-    init(item: Item, dueDate: Date) {
+    init(item: Item, dueDate: Date, contentView: ContentView) {
         self.item = item
         self.dueDate = item.dueDate
         self.name = item.name
         self.isCompleted = item.isCompleted
         self.isForSchool = item.isForSchool
+        self.contentView = contentView
+        self.order = item.order
     }
 
     var body: some View {
@@ -42,7 +46,7 @@ struct ItemView: View {
                     }
                 
                 VStack(alignment: .leading) {
-                    Text("\(item.name)")
+                    Text("\(item.order): \(item.name)")
                         .font(.headline)
                         .foregroundStyle(item.isCompleted ? Color.gray : (item.isForSchool ? Color.red : (colorScheme == .dark ? Color.white : Color.black)))
                         .strikethrough(item.isCompleted)
@@ -59,8 +63,10 @@ struct ItemView: View {
                     withAnimation {
                         isEditing = true
                         isNameFieldFocused = true
+                        order = item.order
                     }
                 }
+                .buttonStyle(PlainButtonStyle())
                 
                 Button("", systemImage: "trash.fill") {
                     withAnimation {
@@ -74,6 +80,8 @@ struct ItemView: View {
                     TextField("Task name", text: $name)
                         .focused($isNameFieldFocused)
                     
+                    Stepper("Order: \(order)", value: $order)
+                    
                     Toggle(isOn: $isForSchool) {
                         Text("For school")
                     }
@@ -82,6 +90,7 @@ struct ItemView: View {
                         isEditing = false
                         item.name = name
                         item.isForSchool = isForSchool
+                        item.order = order
                     }
                 }
             }
@@ -92,9 +101,8 @@ struct ItemView: View {
         withAnimation {
             for item in items {
                 if item.order == order {
-                    ContentView().lastDeletedItem = item
+                    contentView.lastDeletedItem = item
                     modelContext.delete(item)
-                    break
                 } else if item.order > order {
                     item.order -= 1
                 }

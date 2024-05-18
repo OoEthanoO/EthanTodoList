@@ -22,9 +22,13 @@ struct ContentView: View {
     @State var lastDeletedItem: Item?
 
     var body: some View {
+        Text("\(items.count.description) items")
+            .bold()
+            .font(.title)
+            .padding(.top)
         List {
             ForEach(items.sorted(by: sortByOrder)){ item in
-                ItemView(item: item, dueDate: item.dueDate)
+                ItemView(item: item, dueDate: item.dueDate, contentView: self)
             }
             .onMove(perform: move)
         }
@@ -77,7 +81,7 @@ struct ContentView: View {
                     let date2 = Calendar.current.startOfDay(for: furthestDueDate!)
                     let diff = Calendar.current.dateComponents([.day], from: date1, to: date2)
                     let days = diff.day! + 1
-                    totalDays += item.isForSchool ? days : days / 2
+                    totalDays += item.isForSchool ? days : (days / 2 == 0 ? 1 : days / 2)
                     prefixSums.append((totalDays, item.name))
                 }
                 print(prefixSums)
@@ -105,10 +109,11 @@ struct ContentView: View {
             .alert(isPresented: $showAlert) {
                 Alert(title: Text("Next Task"), message: Text(nextTask), dismissButton: .default(Text("Got it!")))
             }
-        }
-        .keyboardShortcut("z", modifiers: .command)
-        .onReceive(NotificationCenter.default.publisher(for: NSUndoManager.undoCheckpointNotification)) { _ in
-            undoDelete()
+            
+            Button(action: undoDelete) {
+                Text("Undo")
+            }
+            .keyboardShortcut("z", modifiers: .command)
         }
     }
 
@@ -153,6 +158,23 @@ struct ContentView: View {
     
     func sortByOrder(item1: Item, item2: Item) -> Bool {
         return item1.order <= item2.order
+    }
+    
+    func undoDelete() {
+        if lastDeletedItem != nil {
+            modelContext.insert(lastDeletedItem!)
+            do {
+                try modelContext.save()
+            } catch {
+                print("Failed to save model context: \(error)")
+            }
+            for item in items {
+                if item.order >= lastDeletedItem!.order {
+                    item.order += 1
+                }
+            }
+            lastDeletedItem = nil
+        }
     }
 }
 

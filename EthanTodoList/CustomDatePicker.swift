@@ -23,8 +23,8 @@ struct CustomDatePicker: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        Text(itemFormatter.string(from: date))
-            .foregroundStyle(isCompleted ? .gray : (colorScheme == .dark ? .white : .black))
+        Text(dateString(from: date))
+            .foregroundStyle(determineColor())
             .onTapGesture {
                 if !isCompleted {
                     self.showingDatePicker = true
@@ -36,5 +36,30 @@ struct CustomDatePicker: View {
                     .labelsHidden()
                     .padding()
             }
+    }
+    
+    private func dateString(from date: Date) -> String {
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            return "Today"
+        } else if calendar.isDateInTomorrow(date) {
+            return "Tomorrow"
+        } else if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else {
+            return itemFormatter.string(from: date)
+        }
+    }
+    
+    private func determineColor() -> Color {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: Date())
+        if date < startOfDay {
+            return .red
+        } else if isCompleted {
+            return .gray
+        } else {
+            return colorScheme == .dark ? .white : .black
+        }
     }
 }

@@ -3,10 +3,46 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "CustomDatePicker.determineColor():CustomDatePicker.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Date()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in ItemView.deleteItem(order:):ItemView.swift">
          <PersistentStrings>
             <PersistentString
                value = "item.order">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #4 in closure #2 in ContentView.body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ContentView.undoDelete():ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.lastDeletedItem.name">
+            </PersistentString>
+            <PersistentString
+               value = "lastDeletedItem.name">
+            </PersistentString>
+            <PersistentString
+               value = "items">
+            </PersistentString>
+            <PersistentString
+               value = "item.name">
+            </PersistentString>
+            <PersistentString
+               value = "lastDeletedItem">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
