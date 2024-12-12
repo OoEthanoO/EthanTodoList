@@ -16,9 +16,12 @@ struct ItemView: View {
     @State var name: String
     @State var isEditing = false
     @State var isCompleted: Bool
+    @State var isDoneForToday: Bool
     @State var isForSchool: Bool
     @State var contentView: ContentView
     @State var order: Int
+    @State private var isHovering = false
+    @State private var notes: String
     
     @Query private var items: [Item]
     
@@ -26,6 +29,7 @@ struct ItemView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @FocusState private var isNameFieldFocused: Bool
+    @FocusState private var isNotesFieldFocused: Bool
     
     init(item: Item, dueDate: Date, contentView: ContentView) {
         self.item = item
@@ -35,6 +39,8 @@ struct ItemView: View {
         self.isForSchool = item.isForSchool
         self.contentView = contentView
         self.order = item.order
+        self.notes = item.notes ?? ""
+        self.isDoneForToday = item.isDoneForToday ?? false
     }
 
     var body: some View {
@@ -43,7 +49,15 @@ struct ItemView: View {
                 Toggle("", isOn: $isCompleted)
                     .onChange(of: isCompleted) {
                         item.isCompleted = isCompleted
+                        isDoneForToday = true
+                        item.isDoneForToday = isDoneForToday
                     }
+                
+                Toggle("", isOn: $isDoneForToday)
+                    .onChange(of: isDoneForToday) {
+                        item.isDoneForToday = isDoneForToday
+                    }
+                    .disabled(isCompleted)
                 
                 VStack(alignment: .leading) {
                     Text("\(item.order): \(item.name)")
@@ -55,30 +69,42 @@ struct ItemView: View {
                         .onChange(of: dueDate) {
                             item.dueDate = dueDate
                         }
+                    
+                    if item.notes != "" {
+                        Text("\(item.notes ?? "")")
+                            .foregroundStyle(Color.gray)
+                    }
                 }
                 
                 Spacer()
                 
-                Button("", systemImage: "pencil.line") {
-                    withAnimation {
-                        isEditing = true
-                        isNameFieldFocused = true
-                        order = item.order
-                    }
-                }
-                .buttonStyle(PlainButtonStyle())
+                Text("\(item.currentMinutes ?? 0)")
                 
-                Button("", systemImage: "trash.fill") {
-                    withAnimation {
-                        deleteItem(order: item.order)
+                if isHovering {
+                    
+                    Button("", systemImage: "pencil.line") {
+                        withAnimation {
+                            isEditing = true
+                            isNameFieldFocused = true
+                            order = item.order
+                        }
                     }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    Button("", systemImage: "trash.fill") {
+                        withAnimation {
+                            deleteItem(order: item.order)
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .foregroundStyle(Color.red)
                 }
-                .buttonStyle(PlainButtonStyle())
-                .foregroundStyle(Color.red)
             } else {
                 VStack(alignment: .leading) {
                     TextField("Task name", text: $name)
                         .focused($isNameFieldFocused)
+                
+                    TextEditor(text: $notes)
                     
                     Stepper("Order: \(order)", value: $order)
                     
@@ -91,8 +117,14 @@ struct ItemView: View {
                         item.name = name
                         item.isForSchool = isForSchool
                         item.order = order
+                        item.notes = notes
                     }
                 }
+            }
+        }
+        .onHover { hovering in
+            withAnimation {
+                self.isHovering = hovering
             }
         }
     }

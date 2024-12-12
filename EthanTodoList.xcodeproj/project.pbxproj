@@ -13,6 +13,9 @@
 		8106F8832BD680F1000F1B7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8106F8822BD680F1000F1B7C /* Assets.xcassets */; };
 		8106F8862BD680F1000F1B7C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8106F8852BD680F1000F1B7C /* Preview Assets.xcassets */; };
 		810999112BDAF26F0012C5BD /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810999102BDAF26F0012C5BD /* CustomDatePicker.swift */; };
+		810F8BD02D0B74860014A2E8 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F8BCF2D0B74740014A2E8 /* TimerView.swift */; };
+		813DB5722D0B8070000B913A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813DB5712D0B8066000B913A /* LogView.swift */; };
+		813DB5742D0B80A5000B913A /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813DB5732D0B80A1000B913A /* LogManager.swift */; };
 		81AE6ABF2BDAE3A500E300E9 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +28,9 @@
 		8106F8852BD680F1000F1B7C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8106F8872BD680F1000F1B7C /* EthanTodoList.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EthanTodoList.entitlements; sourceTree = "<group>"; };
 		810999102BDAF26F0012C5BD /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
+		810F8BCF2D0B74740014A2E8 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		813DB5712D0B8066000B913A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		813DB5732D0B80A1000B913A /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,6 +64,9 @@
 		8106F87B2BD680F0000F1B7C /* EthanTodoList */ = {
 			isa = PBXGroup;
 			children = (
+				813DB5732D0B80A1000B913A /* LogManager.swift */,
+				813DB5712D0B8066000B913A /* LogView.swift */,
+				810F8BCF2D0B74740014A2E8 /* TimerView.swift */,
 				8106F87C2BD680F0000F1B7C /* EthanTodoListApp.swift */,
 				8106F87E2BD680F0000F1B7C /* ContentView.swift */,
 				8106F8802BD680F0000F1B7C /* Item.swift */,
@@ -148,11 +157,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				813DB5742D0B80A5000B913A /* LogManager.swift in Sources */,
+				810F8BD02D0B74860014A2E8 /* TimerView.swift in Sources */,
 				810999112BDAF26F0012C5BD /* CustomDatePicker.swift in Sources */,
 				8106F87F2BD680F0000F1B7C /* ContentView.swift in Sources */,
 				8106F8812BD680F0000F1B7C /* Item.swift in Sources */,
 				8106F87D2BD680F0000F1B7C /* EthanTodoListApp.swift in Sources */,
 				81AE6ABF2BDAE3A500E300E9 /* ItemView.swift in Sources */,
+				813DB5722D0B8070000B913A /* LogView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +297,7 @@
 				CODE_SIGN_ENTITLEMENTS = EthanTodoList/EthanTodoList.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanTodoList/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -314,7 +326,7 @@
 				CODE_SIGN_ENTITLEMENTS = EthanTodoList/EthanTodoList.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanTodoList/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -54,10 +54,10 @@ struct CustomDatePicker: View {
     private func determineColor() -> Color {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: Date())
-        if date < startOfDay {
-            return .red
-        } else if isCompleted {
+        if isCompleted {
             return .gray
+        } else if date < startOfDay {
+            return .red
         } else {
             return colorScheme == .dark ? .white : .black
         }

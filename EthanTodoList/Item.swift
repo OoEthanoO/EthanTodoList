@@ -15,6 +15,9 @@ final class Item {
     var dueDate: Date
     var isForSchool: Bool
     var isCompleted: Bool
+    var currentMinutes: Int? = 0
+    var notes: String? = ""
+    var isDoneForToday: Bool? = false
     
     init(order: Int, name: String, dueDate: Date, isForSchool: Bool, isCompleted: Bool) {
         self.order = order

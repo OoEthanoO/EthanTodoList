@@ -28,5 +28,25 @@ struct EthanTodoListApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("Show Logs") {
+                    showLogWindow()
+                }
+                .keyboardShortcut("L", modifiers: [.command])
+            }
+        }
+    }
+    
+    private func showLogWindow() {
+        let logWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
+            styleMask: [.titled, .closable, .resizable],
+            backing: .buffered, defer: false
+        )
+        logWindow.center()
+        logWindow.setFrameAutosaveName("Log Window")
+        logWindow.contentView = NSHostingView(rootView: LogView(logManager: LogManager.shared))
+        logWindow.makeKeyAndOrderFront(nil)
     }
 }
