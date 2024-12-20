@@ -17,6 +17,7 @@
 		813DB5722D0B8070000B913A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813DB5712D0B8066000B913A /* LogView.swift */; };
 		813DB5742D0B80A5000B913A /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813DB5732D0B80A1000B913A /* LogManager.swift */; };
 		81AE6ABF2BDAE3A500E300E9 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */; };
+		81FF6F1F2D0D2ECB007F654C /* Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FF6F1E2D0D2ECB007F654C /* Class.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		813DB5712D0B8066000B913A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		813DB5732D0B80A1000B913A /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
+		81FF6F1E2D0D2ECB007F654C /* Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Class.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				8106F87C2BD680F0000F1B7C /* EthanTodoListApp.swift */,
 				8106F87E2BD680F0000F1B7C /* ContentView.swift */,
 				8106F8802BD680F0000F1B7C /* Item.swift */,
+				81FF6F1E2D0D2ECB007F654C /* Class.swift */,
 				8106F8822BD680F1000F1B7C /* Assets.xcassets */,
 				8106F8872BD680F1000F1B7C /* EthanTodoList.entitlements */,
 				8106F8842BD680F1000F1B7C /* Preview Content */,
@@ -115,7 +118,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					8106F8782BD680F0000F1B7C = {
 						CreatedOnToolsVersion = 15.3;
@@ -157,6 +160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81FF6F1F2D0D2ECB007F654C /* Class.swift in Sources */,
 				813DB5742D0B80A5000B913A /* LogManager.swift in Sources */,
 				810F8BD02D0B74860014A2E8 /* TimerView.swift in Sources */,
 				810999112BDAF26F0012C5BD /* CustomDatePicker.swift in Sources */,
@@ -205,6 +209,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -268,6 +273,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -297,7 +303,8 @@
 				CODE_SIGN_ENTITLEMENTS = EthanTodoList/EthanTodoList.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 39;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanTodoList/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -326,7 +333,8 @@
 				CODE_SIGN_ENTITLEMENTS = EthanTodoList/EthanTodoList.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 39;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanTodoList/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
 				ENABLE_HARDENED_RUNTIME = YES;
