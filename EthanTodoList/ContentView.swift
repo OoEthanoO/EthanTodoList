@@ -202,14 +202,12 @@ struct ContentView: View {
                 var gameTime: Date? = sleepTime;
                 
                 codeMinutes = timeBetweenHomeAndSleep / 8
-                codeTime = Calendar.current.date(byAdding: .minute, value: -(timeBetweenHomeAndSleep / 8), to: sleepTime)
                 
-//                if weekday >= 2 && weekday <= 5 {
-//                    gameMinutes = timeBetweenHomeAndSleep / 16
-//                } else {
-//                    gameMinutes = timeBetweenHomeAndSleep / 8
-//                }
-                gameMinutes = timeBetweenHomeAndSleep / 8
+                if weekday >= 2 && weekday <= 5 {
+                    gameMinutes = timeBetweenHomeAndSleep / 8
+                } else {
+                    gameMinutes = timeBetweenHomeAndSleep / 4
+                }
                 
                 gameTime = Calendar.current.date(byAdding: .minute, value: -(gameMinutes + offset), to: sleepTime)
                 codeTime = Calendar.current.date(byAdding: .minute, value: -codeMinutes, to: gameTime!)
@@ -222,7 +220,7 @@ struct ContentView: View {
                 print("gameTime = \(timeFormatter.string(from: gameTime!))")
                 
                 if Date() >= gameTime! {
-                    nextTask = "Go do some gaming!"
+                    nextTask = "Go do some gaming until " + timeFormatter.string(from: Calendar.current.date(byAdding: .minute, value: -offset, to: sleepTime)!) + "!"
                     self.showRandomTaskAlert = true
                     return
                 } else if Date() >= codeTime! {
