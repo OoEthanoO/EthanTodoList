@@ -29,13 +29,17 @@ struct ContentView: View {
     @State private var showRandomTaskAlert = false
     @State private var showPreviousTaskAlert = false
     @State private var showSumAlert = false
+    @State private var showInfoAlert = false
     @State private var nextTask = ""
+    @State private var isCustomGameTime = false
+    @State private var customGameTime = 0
     @AppStorage("lastGeneratedTask") var lastGeneratedTask: String = ""
     @AppStorage("homeTime") var homeTime: Date = Date()
     @AppStorage("sleepTime") var sleepTime: Date = Date()
     @AppStorage("wakeUpTime") var wakeUpTime: Date = Date()
     @AppStorage("offset") var offset: Int = 0
     @AppStorage("totalOffset") var totalOffset: Int = 0
+    @AppStorage("halfTime") var halfTime: Bool = false
     
     @State var lastDeletedItem: Item?
     
@@ -82,60 +86,70 @@ struct ContentView: View {
             
             DatePicker("Sleep Time", selection: $sleepTime, displayedComponents: .hourAndMinute)
             
+            Toggle("Half" + (halfTime ? " (" + timeFormatter.string(from: getMiddleTime()) + ")" : ""), isOn: $halfTime)
+            
             DatePicker("Wake Up Time", selection: $wakeUpTime, displayedComponents: .hourAndMinute)
+            
+            Toggle("Custom Game Time", isOn: $isCustomGameTime)
+            
+            if isCustomGameTime {
+                TextField("", value: $customGameTime, format: .number)
+                    .frame(width: 50)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
         }
         .padding()
         HStack {
-            Button(action: {
-                self.showingViewClasses = true
-            }) {
-                Text("View Classes")
-            }
-            .sheet(isPresented: $showingViewClasses) {
-                VStack {
-                    Text("Courses")
-                        .font(.title)
-                        .bold()
-                        .padding()
-                    
-                    List(classes) { classItem in
-                        Text("Class from \(timeFormatter.string(from: classItem.startTime)) to \(timeFormatter.string(from: classItem.endTime))")
-                    }
-                    .padding()
-                    
-                    Button(action: {
-                        self.showingAddClass = true
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                    .sheet(isPresented: $showingAddClass) {
-                        VStack {
-                            Text("New Class")
-                                .font(.title)
-                                .bold()
-                                .padding()
-                            
-                            DatePicker("Start Time", selection: $newClassStartTime, displayedComponents: .hourAndMinute)
-                                .padding()
-                            
-                            DatePicker("End Time", selection: $newClassEndTime, displayedComponents: .hourAndMinute)
-                                .padding()
-                            
-                            Spacer()
-                            
-                            Button(action: {
-                                self.showingAddClass = false
-                                addClass()
-                            }) {
-                                Text("Add Class")
-                            }
-                        }
-                    }
-                }
-                .padding()
-                .frame(width: 500, height: 400)
-            }
-            .padding()
+//            Button(action: {
+//                self.showingViewClasses = true
+//            }) {
+//                Text("View Classes")
+//            }
+//            .sheet(isPresented: $showingViewClasses) {
+//                VStack {
+//                    Text("Courses")
+//                        .font(.title)
+//                        .bold()
+//                        .padding()
+//                    
+//                    List(classes) { classItem in
+//                        Text("Class from \(timeFormatter.string(from: classItem.startTime)) to \(timeFormatter.string(from: classItem.endTime))")
+//                    }
+//                    .padding()
+//                    
+//                    Button(action: {
+//                        self.showingAddClass = true
+//                    }) {
+//                        Image(systemName: "plus")
+//                    }
+//                    .sheet(isPresented: $showingAddClass) {
+//                        VStack {
+//                            Text("New Class")
+//                                .font(.title)
+//                                .bold()
+//                                .padding()
+//                            
+//                            DatePicker("Start Time", selection: $newClassStartTime, displayedComponents: .hourAndMinute)
+//                                .padding()
+//                            
+//                            DatePicker("End Time", selection: $newClassEndTime, displayedComponents: .hourAndMinute)
+//                                .padding()
+//                            
+//                            Spacer()
+//                            
+//                            Button(action: {
+//                                self.showingAddClass = false
+//                                addClass()
+//                            }) {
+//                                Text("Add Class")
+//                            }
+//                        }
+//                    }
+//                }
+//                .padding()
+//                .frame(width: 500, height: 400)
+//            }
+//            .padding()
             
             Button(action: {
                 self.showingAddTask = true
@@ -175,9 +189,6 @@ struct ContentView: View {
             
             Button(action: {
                 let sum: Double = getSum()
-                var sortedItems: [Item] {
-                    items.sorted(by: sortByOrder)
-                }
                 
                 let randomValue = Double.random(in: 0...sum)
                 
@@ -185,56 +196,33 @@ struct ContentView: View {
                 
                 print("------------------------------------------")
                 
-                homeTime = updateToToday(date: homeTime)
-                sleepTime = updateToToday(date: sleepTime)
+                let information = getInformation()
+                let codeTime = information.1
+                let gameTime = information.3
+                let curSleepTime = information.4
                 
-                let timeBetweenHomeAndSleep: Int = (Calendar.current.dateComponents([.minute], from: removeSeconds(from: homeTime), to: removeSeconds(from: sleepTime)).minute ?? 0) - totalOffset
-                
-                print("timeBetweenHomeAndSleep = \(timeBetweenHomeAndSleep)")
-                
-                let weekday = Calendar.current.dateComponents([.weekday], from: Date()).weekday!;
-                
-                print("weekday = \(weekday)")
-                
-                var codeMinutes: Int = 0
-                var gameMinutes: Int = 0
-                var codeTime: Date? = sleepTime;
-                var gameTime: Date? = sleepTime;
-                
-                codeMinutes = timeBetweenHomeAndSleep / 8
-                
-                if weekday >= 2 && weekday <= 5 {
-                    gameMinutes = timeBetweenHomeAndSleep / 8
-                } else {
-                    gameMinutes = timeBetweenHomeAndSleep / 4
-                }
-                
-                gameTime = Calendar.current.date(byAdding: .minute, value: -(gameMinutes + offset), to: sleepTime)
-                codeTime = Calendar.current.date(byAdding: .minute, value: -codeMinutes, to: gameTime!)
-                gameTime = removeSeconds(from: gameTime!)
-                codeTime = removeSeconds(from: codeTime!)
-                
-                print("codeMinutes = \(codeMinutes)")
-                print("codeTime = \(timeFormatter.string(from: codeTime!))")
-                print("gameMinutes = \(gameMinutes)")
-                print("gameTime = \(timeFormatter.string(from: gameTime!))")
-                
-                if Date() >= gameTime! {
-                    nextTask = "Go do some gaming until " + timeFormatter.string(from: Calendar.current.date(byAdding: .minute, value: -offset, to: sleepTime)!) + "!"
+                if Date() >= gameTime {
+                    nextTask = "Go do some gaming until " + timeFormatter.string(from: Calendar.current.date(byAdding: .minute, value: -offset, to: curSleepTime)!) + "!"
                     self.showRandomTaskAlert = true
                     return
-                } else if Date() >= codeTime! {
-                    nextTask = "Go do some coding until " + timeFormatter.string(from: gameTime!) + "!"
+                } else if Date() >= codeTime {
+                    nextTask = "Go do some coding until " + timeFormatter.string(from: gameTime) + "!"
                     self.showRandomTaskAlert = true
                     return
                 }
                 
-                for item in sortedItems {
+                for item in items {
+                    
                     if item.isDoneForToday! {
                         continue
                     }
                     
-                    let days = (Calendar.current.dateComponents([.day], from: Date(), to: item.dueDate).day ?? 0) + 1
+                    item.dueDate = removeHours(from: item.dueDate)
+                    if item.isDoneForToday! {
+                        continue
+                    }
+                    
+                    let days = (Calendar.current.dateComponents([.day], from: removeHours(from: Date()), to: item.dueDate).day ?? 0)
                     var doubleDays: Double = 0
                     if days > 0 {
                         doubleDays = Double(days)
@@ -243,12 +231,12 @@ struct ContentView: View {
                     }
                     
                     var fraction: Double = 1 / doubleDays
-                    fraction *= (item.isForSchool ? 1 : 0.5)
+                    fraction *= (item.isForSchool ? 1 : 0.33)
                     
                     currentSum += fraction
                     
                     if currentSum >= randomValue {
-                        let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: Date(), to: codeTime!).minute ?? 0)
+                        let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: Date(), to: codeTime).minute ?? 0)
                         
                         print("totalWorkMinutes = \(totalWorkMinutes)")
                         
@@ -256,7 +244,7 @@ struct ContentView: View {
                         
                         print("workMinutes = \(workMinutes)")
                         
-                        nextTask = item.name + " for \(workMinutes) minutes\nWork until \(timeFormatter.string(from: codeTime!))"
+                        nextTask = item.name + " for \(workMinutes) minutes\nWork until \(timeFormatter.string(from: codeTime))"
                         lastGeneratedTask = nextTask
                         
                         break
@@ -288,6 +276,21 @@ struct ContentView: View {
             }
             .alert(isPresented: $showSumAlert) {
                 Alert(title: Text("Sum"), message: Text("\(getSum())"))
+            }
+            .padding()
+            
+            Button(action: {
+                self.showInfoAlert = true
+            }) {
+                Text("Show Info")
+            }
+            .alert(isPresented: $showInfoAlert) {
+                let information = getInformation()
+                let codeMinutes = information.0
+                let codeTime = information.1
+                let gameMinutes = information.2
+                let gameTime = information.3
+                return Alert(title: Text("Information"), message: Text("Code Minutes: \(codeMinutes)\nCode Time: \(timeFormatter.string(from: codeTime))\nGame Minutes: \(gameMinutes)\nGame Time: \(timeFormatter.string(from: gameTime))"))
             }
             .padding()
         }
@@ -381,10 +384,7 @@ struct ContentView: View {
     
     private func getSum() -> Double {
         var sum: Double = 0
-        var sortedItems: [Item] {
-            items.sorted(by: sortByOrder)
-        }
-        for item in sortedItems {
+        for item in items {
             if item.isDoneForToday! {
                 continue
             }
@@ -400,11 +400,75 @@ struct ContentView: View {
             }
             
             var value: Double = 1 / doubleDays
-            value *= (item.isForSchool ? 1 : 0.5)
+            value *= (item.isForSchool ? 1 : 0.33)
             sum += value
         }
         
         return sum
+    }
+    
+    private func getMiddleTime() -> Date {
+        let timeBetweenHomeAndSleep: Int = (Calendar.current.dateComponents([.minute], from: removeSeconds(from: homeTime), to: removeSeconds(from: sleepTime)).minute ?? 0)
+        
+        var middleTime = Calendar.current.date(byAdding: .minute, value: -(timeBetweenHomeAndSleep / 2), to: sleepTime)
+        middleTime = updateToToday(date: middleTime!)
+        
+        return middleTime!
+    }
+    
+    private func getInformation() -> (Int, Date, Int, Date, Date) {
+        homeTime = updateToToday(date: homeTime)
+        sleepTime = updateToToday(date: sleepTime)
+        
+        var curHomeTime: Date = homeTime
+        var curSleepTime: Date = sleepTime
+        
+        if halfTime {
+            let middleTime = getMiddleTime()
+            print("middleTime = \(timeFormatter.string(from: middleTime))")
+            if Calendar.current.dateComponents([.minute], from: removeSeconds(from: Date()), to: removeSeconds(from: middleTime)).minute! < 0 {
+                curHomeTime = middleTime
+            } else {
+                curSleepTime = middleTime
+            }
+        }
+        
+        let timeBetweenHomeAndSleep = (Calendar.current.dateComponents([.minute], from: removeSeconds(from: curHomeTime), to: removeSeconds(from: curSleepTime)).minute ?? 0) - totalOffset
+        
+        print("timeBetweenHomeAndSleep = \(timeBetweenHomeAndSleep)")
+        
+        let weekday = Calendar.current.dateComponents([.weekday], from: Date()).weekday!;
+        
+        print("weekday = \(weekday)")
+        
+        var codeMinutes: Int = 0
+        var gameMinutes: Int = 0
+        var codeTime: Date? = curSleepTime;
+        var gameTime: Date? = curSleepTime;
+        
+        codeMinutes = timeBetweenHomeAndSleep / 8
+        
+        if isCustomGameTime {
+            gameMinutes = customGameTime
+        } else {
+            if weekday >= 2 && weekday <= 5 {
+                gameMinutes = timeBetweenHomeAndSleep / 8
+            } else {
+                gameMinutes = timeBetweenHomeAndSleep / 2
+            }
+        }
+        
+        gameTime = Calendar.current.date(byAdding: .minute, value: -(gameMinutes + offset), to: curSleepTime)
+        codeTime = Calendar.current.date(byAdding: .minute, value: -codeMinutes, to: gameTime!)
+        gameTime = removeSeconds(from: gameTime!)
+        codeTime = removeSeconds(from: codeTime!)
+        
+        print("codeMinutes = \(codeMinutes)")
+        print("codeTime = \(timeFormatter.string(from: codeTime!))")
+        print("gameMinutes = \(gameMinutes)")
+        print("gameTime = \(timeFormatter.string(from: gameTime!))")
+        
+        return (codeMinutes, codeTime!, gameMinutes, gameTime!, curSleepTime)
     }
 }
 

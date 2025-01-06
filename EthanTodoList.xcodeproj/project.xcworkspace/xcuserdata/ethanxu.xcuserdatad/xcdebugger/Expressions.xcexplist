@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "closure #4 in closure #3 in ContentView.body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #7 in closure #3 in ContentView.body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
@@ -33,13 +41,16 @@
          contextName = "ContentView.getSum():ContentView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Calendar.current.dateComponents([.day], from: Date(), to: item.dueDate).day">
+               value = "sortedItems">
+            </PersistentString>
+            <PersistentString
+               value = "item.name">
             </PersistentString>
             <PersistentString
                value = "item.dueDate">
             </PersistentString>
             <PersistentString
-               value = "item.name">
+               value = "Calendar.current.dateComponents([.day], from: Date(), to: item.dueDate).day">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
