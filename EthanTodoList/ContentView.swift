@@ -51,7 +51,10 @@ struct ContentView: View {
     }()
     
     var body: some View {
-        Text("\(items.count.description) items")
+        let notCompletedTasks = items.filter { !$0.isCompleted }
+        let isDoneForTodayTasks = notCompletedTasks.filter { $0.isDoneForToday ?? false }
+        
+        Text("\(items.count.description) items: \(isDoneForTodayTasks.count.description)/\(notCompletedTasks.count.description)")
             .bold()
             .font(.title)
             .padding(.top)
@@ -452,9 +455,9 @@ struct ContentView: View {
             gameMinutes = customGameTime
         } else {
             if weekday >= 2 && weekday <= 5 {
-                gameMinutes = timeBetweenHomeAndSleep / 8
+                gameMinutes = timeBetweenHomeAndSleep / 16
             } else {
-                gameMinutes = timeBetweenHomeAndSleep / 2
+                gameMinutes = timeBetweenHomeAndSleep / 8
             }
         }
         
