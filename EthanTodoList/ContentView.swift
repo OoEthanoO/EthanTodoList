@@ -53,11 +53,21 @@ struct ContentView: View {
     var body: some View {
         let notCompletedTasks = items.filter { !$0.isCompleted }
         let isDoneForTodayTasks = notCompletedTasks.filter { $0.isDoneForToday ?? false }
-        
-        Text("\(items.count.description) items: \(isDoneForTodayTasks.count.description)/\(notCompletedTasks.count.description)")
-            .bold()
-            .font(.title)
+        HStack {
+            Text("\(items.count.description) items: \(isDoneForTodayTasks.count.description)/\(notCompletedTasks.count.description)")
+                .bold()
+                .font(.title)
+                .padding(.top)
+            
+            Button(action: {
+                for item in notCompletedTasks {
+                    item.isDoneForToday = false
+                }
+            }) {
+                Text("Clear All")
+            }
             .padding(.top)
+        }
         HStack {
             List {
                 ForEach(items.sorted(by: sortByOrder)){ item in
@@ -191,11 +201,7 @@ struct ContentView: View {
             .padding()
             
             Button(action: {
-                let sum: Double = getSum()
-                
-                let randomValue = Double.random(in: 0...sum)
-                
-                var currentSum: Double = 0
+                var sum: Double = getSum()
                 
                 print("------------------------------------------")
                 
@@ -234,23 +240,71 @@ struct ContentView: View {
                     }
                     
                     var fraction: Double = 1 / doubleDays
-                    fraction *= (item.isForSchool ? 1 : 0.33)
+                    fraction *= (item.isForSchool ? 1 : 0.5)
                     
-                    currentSum += fraction
+                    let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: Date(), to: codeTime).minute ?? 0)
                     
-                    if currentSum >= randomValue {
-                        let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: Date(), to: codeTime).minute ?? 0)
+                    print("totalWorkMinutes = \(totalWorkMinutes)")
+                    
+                    let workMinutes: Int = Int((fraction / sum) * Double(totalWorkMinutes))
+                    
+                    print("workMinutes = \(workMinutes)")
+                    
+                    item.currentMinutes = workMinutes
+                    
+                    if workMinutes <= 5 {
+                        item.isDoneForToday = true
+                        try? modelContext.save()
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    
+                    sum = getSum()
+                    
+                    let randomValue = Double.random(in: 0...sum)
+                    
+                    var currentSum: Double = 0
+                    
+                    nextTask = ""
+                    
+                    for item in items {
                         
-                        print("totalWorkMinutes = \(totalWorkMinutes)")
+                        if item.isDoneForToday! {
+                            continue
+                        }
+                        
+                        item.dueDate = removeHours(from: item.dueDate)
+                        
+                        let days = (Calendar.current.dateComponents([.day], from: removeHours(from: Date()), to: item.dueDate).day ?? 0)
+                        var doubleDays: Double = 0
+                        if days > 0 {
+                            doubleDays = Double(days)
+                        } else {
+                            doubleDays = 1 / (Double(days) + 2)
+                        }
+                        
+                        var fraction: Double = 1 / doubleDays
+                        fraction *= (item.isForSchool ? 1 : 0.5)
+                        
+                        currentSum += fraction
+                        
+                        let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: Date(), to: codeTime).minute ?? 0)
                         
                         let workMinutes: Int = Int((fraction / sum) * Double(totalWorkMinutes))
                         
-                        print("workMinutes = \(workMinutes)")
+                        item.currentMinutes = workMinutes
                         
-                        nextTask = item.name + " for \(workMinutes) minutes\nWork until \(timeFormatter.string(from: codeTime))"
-                        lastGeneratedTask = nextTask
-                        
-                        break
+                        if currentSum >= randomValue {
+                            print("totalWorkMinutes = \(totalWorkMinutes)")
+                            
+                            print("workMinutes = \(workMinutes)")
+                            
+                            if nextTask == "" {
+                                nextTask = item.name + " for \(workMinutes) minutes\nWork until \(timeFormatter.string(from: codeTime))"
+                                lastGeneratedTask = nextTask
+                            }
+                        }
                     }
                 }
                 self.showRandomTaskAlert = true
@@ -403,11 +457,31 @@ struct ContentView: View {
             }
             
             var value: Double = 1 / doubleDays
-            value *= (item.isForSchool ? 1 : 0.33)
+            value *= (item.isForSchool ? 1 : 0.5)
             sum += value
         }
         
         return sum
+    }
+    
+    private func cleanUp(sum: Double) {
+        for item in items {
+            item.dueDate = removeHours(from: item.dueDate)
+            if item.isDoneForToday! {
+                continue
+            }
+            
+            let days = (Calendar.current.dateComponents([.day], from: removeHours(from: Date()), to: item.dueDate).day ?? 0)
+            var doubleDays: Double = 0
+            if days > 0 {
+                doubleDays = Double(days)
+            } else {
+                doubleDays = 1 / (Double(days) + 2)
+            }
+            
+            var fraction: Double = 1 / doubleDays
+            fraction *= (item.isForSchool ? 1 : 0.5)
+        }
     }
     
     private func getMiddleTime() -> Date {

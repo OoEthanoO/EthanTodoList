@@ -42,6 +42,13 @@ struct ItemView: View {
         self.notes = item.notes ?? ""
         self.isDoneForToday = item.isDoneForToday ?? false
     }
+    
+    private var isDoneForTodayBinding: Binding<Bool> {
+        Binding<Bool>(
+            get: { item.isDoneForToday ?? false },
+            set: { item.isDoneForToday = $0 }
+        )
+    }
 
     var body: some View {
         HStack {
@@ -53,10 +60,7 @@ struct ItemView: View {
                         item.isDoneForToday = isDoneForToday
                     }
                 
-                Toggle("", isOn: $isDoneForToday)
-                    .onChange(of: isDoneForToday) {
-                        item.isDoneForToday = isDoneForToday
-                    }
+                Toggle("", isOn: isDoneForTodayBinding)
                     .disabled(isCompleted)
                 
                 VStack(alignment: .leading) {
