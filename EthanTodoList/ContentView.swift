@@ -31,8 +31,7 @@ struct ContentView: View {
     @State private var showSumAlert = false
     @State private var showInfoAlert = false
     @State private var nextTask = ""
-    @State private var isCustomGameTime = false
-    @State private var customGameTime = 0
+    @AppStorage("customGameTime") private var customGameTime = 0
     @AppStorage("lastGeneratedTask") var lastGeneratedTask: String = ""
     @AppStorage("homeTime") var homeTime: Date = Date()
     @AppStorage("sleepTime") var sleepTime: Date = Date()
@@ -40,6 +39,10 @@ struct ContentView: View {
     @AppStorage("offset") var offset: Int = 0
     @AppStorage("totalOffset") var totalOffset: Int = 0
     @AppStorage("halfTime") var halfTime: Bool = false
+    @AppStorage("sleepTomorrow") var sleepTomorrow: Bool = false
+    @AppStorage("isTomorrow") var isTomorrow: Bool = false
+    @AppStorage("isCustomGameTime") private var isCustomGameTime = false
+    @AppStorage("autoAdjust") private var autoAdjust = false
     
     @State var lastDeletedItem: Item?
     
@@ -97,7 +100,11 @@ struct ContentView: View {
             
             DatePicker("Home Time", selection: $homeTime, displayedComponents: .hourAndMinute)
             
+            Toggle("Is Tomorrow", isOn: $isTomorrow)
+            
             DatePicker("Sleep Time", selection: $sleepTime, displayedComponents: .hourAndMinute)
+            
+            Toggle("Sleep Tomorrow", isOn: $sleepTomorrow)
             
             Toggle("Half" + (halfTime ? " (" + timeFormatter.string(from: getMiddleTime()) + ")" : ""), isOn: $halfTime)
             
@@ -110,6 +117,8 @@ struct ContentView: View {
                     .frame(width: 50)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             }
+            
+            Toggle("Auto Adjustment", isOn: $autoAdjust)
         }
         .padding()
         HStack {
@@ -210,51 +219,55 @@ struct ContentView: View {
                 let gameTime = information.3
                 let curSleepTime = information.4
                 
-                if Date() >= gameTime {
+                var rightNow: Date = updateToToday(date: Date(), tomorrow: isTomorrow)
+                
+                if rightNow >= gameTime {
                     nextTask = "Go do some gaming until " + timeFormatter.string(from: Calendar.current.date(byAdding: .minute, value: -offset, to: curSleepTime)!) + "!"
                     self.showRandomTaskAlert = true
                     return
-                } else if Date() >= codeTime {
+                } else if rightNow >= codeTime {
                     nextTask = "Go do some coding until " + timeFormatter.string(from: gameTime) + "!"
                     self.showRandomTaskAlert = true
                     return
                 }
                 
-                for item in items {
-                    
-                    if item.isDoneForToday! {
-                        continue
-                    }
-                    
-                    item.dueDate = removeHours(from: item.dueDate)
-                    if item.isDoneForToday! {
-                        continue
-                    }
-                    
-                    let days = (Calendar.current.dateComponents([.day], from: removeHours(from: Date()), to: item.dueDate).day ?? 0)
-                    var doubleDays: Double = 0
-                    if days > 0 {
-                        doubleDays = Double(days)
-                    } else {
-                        doubleDays = 1 / (Double(days) + 2)
-                    }
-                    
-                    var fraction: Double = 1 / doubleDays
-                    fraction *= (item.isForSchool ? 1 : 0.5)
-                    
-                    let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: Date(), to: codeTime).minute ?? 0)
-                    
-                    print("totalWorkMinutes = \(totalWorkMinutes)")
-                    
-                    let workMinutes: Int = Int((fraction / sum) * Double(totalWorkMinutes))
-                    
-                    print("workMinutes = \(workMinutes)")
-                    
-                    item.currentMinutes = workMinutes
-                    
-                    if workMinutes <= 5 {
-                        item.isDoneForToday = true
-                        try? modelContext.save()
+                if (autoAdjust) {
+                    for item in items {
+                        
+                        if item.isDoneForToday! {
+                            continue
+                        }
+                        
+                        item.dueDate = removeHours(from: item.dueDate)
+                        if item.isDoneForToday! {
+                            continue
+                        }
+                        
+                        let days = (Calendar.current.dateComponents([.day], from: removeHours(from: Date()), to: item.dueDate).day ?? 0)
+                        var doubleDays: Double = 0
+                        if days > 0 {
+                            doubleDays = Double(days)
+                        } else {
+                            doubleDays = 1 / (Double(days) + 2)
+                        }
+                        
+                        var fraction: Double = 1 / doubleDays
+                        fraction *= (item.isForSchool ? 1 : 0.1)
+                        
+                        let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: rightNow, to: codeTime).minute ?? 0)
+                        
+                        print("totalWorkMinutes = \(totalWorkMinutes)")
+                        
+                        let workMinutes: Int = Int((fraction / sum) * Double(totalWorkMinutes))
+                        
+                        print("workMinutes = \(workMinutes)")
+                        
+                        item.currentMinutes = workMinutes
+                        
+                        if workMinutes <= 30 {
+                            item.isDoneForToday = true
+                            try? modelContext.save()
+                        }
                     }
                 }
                 
@@ -285,11 +298,11 @@ struct ContentView: View {
                         }
                         
                         var fraction: Double = 1 / doubleDays
-                        fraction *= (item.isForSchool ? 1 : 0.5)
+                        fraction *= (item.isForSchool ? 1 : 0.1)
                         
                         currentSum += fraction
                         
-                        let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: Date(), to: codeTime).minute ?? 0)
+                        let totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: rightNow, to: codeTime).minute ?? 0)
                         
                         let workMinutes: Int = Int((fraction / sum) * Double(totalWorkMinutes))
                         
@@ -306,8 +319,10 @@ struct ContentView: View {
                             }
                         }
                     }
+                    
+                    self.showRandomTaskAlert = true
                 }
-                self.showRandomTaskAlert = true
+//                self.showRandomTaskAlert = true
             }) {
                 Text("Random Task")
             }
@@ -433,9 +448,14 @@ struct ContentView: View {
         return calendar.date(from: components) ?? date
     }
     
-    private func updateToToday(date: Date) -> Date {
+    private func updateToToday(date: Date, tomorrow: Bool = false) -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute], from: date)
+        
+        if (tomorrow) {
+            return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: Date().addingTimeInterval(86400))!
+        }
+        
         return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: Date())!
     }
     
@@ -457,7 +477,7 @@ struct ContentView: View {
             }
             
             var value: Double = 1 / doubleDays
-            value *= (item.isForSchool ? 1 : 0.5)
+            value *= (item.isForSchool ? 1 : 0.1)
             sum += value
         }
         
@@ -480,7 +500,7 @@ struct ContentView: View {
             }
             
             var fraction: Double = 1 / doubleDays
-            fraction *= (item.isForSchool ? 1 : 0.5)
+            fraction *= (item.isForSchool ? 1 : 0.1)
         }
     }
     
@@ -495,7 +515,7 @@ struct ContentView: View {
     
     private func getInformation() -> (Int, Date, Int, Date, Date) {
         homeTime = updateToToday(date: homeTime)
-        sleepTime = updateToToday(date: sleepTime)
+        sleepTime = updateToToday(date: sleepTime, tomorrow: sleepTomorrow)
         
         var curHomeTime: Date = homeTime
         var curSleepTime: Date = sleepTime
@@ -529,8 +549,7 @@ struct ContentView: View {
             gameMinutes = customGameTime
         } else {
             if weekday >= 2 && weekday <= 5 {
-                gameMinutes = timeBetweenHomeAndSleep / 16
-            } else {
+        gameMinutes = timeBetweenHomeAndSleep / 16            } else {
                 gameMinutes = timeBetweenHomeAndSleep / 8
             }
         }
