@@ -570,9 +570,9 @@ struct TimerView: View {
     private func allocateTime() {
         let sum = getSum()
         
-        sleepTime = updateToToday(date: sleepTime, tomorrow: sleepTomorrow)
+        sleepTime = updateToToday(date: sleepTime)
         
-        let rightNow = updateToToday(date: Date(), tomorrow: isTomorrow)
+        let rightNow = Date()
         
         for item in items {
             if item.isDoneForToday! || item.currentMinutes ?? 0 <= item.completedTime ?? 0 {
@@ -620,15 +620,24 @@ struct TimerView: View {
         return calendar.date(from: components) ?? date
     }
     
-    private func updateToToday(date: Date, tomorrow: Bool = false) -> Date {
-        // Implementation from macOS app
+    private func updateToToday(date: Date) -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute], from: date)
+        let now = Date()
+        let currentComponents = calendar.dateComponents([.hour, .minute], from: now)
         
-        if (tomorrow) {
-            return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: Date().addingTimeInterval(86400))!
+        // Check if time has already passed today
+        let timeHasPassed = components.hour! < currentComponents.hour! ||
+                          (components.hour! == currentComponents.hour! &&
+                           components.minute! <= currentComponents.minute!)
+        
+        // Set to tomorrow if explicitly requested or if the time has already passed today
+        if timeHasPassed {
+            return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: now.addingTimeInterval(86400))!
         }
-        return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: Date())!
+        
+        // Otherwise set to today
+        return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: now)!
     }
     
     private func getSum() -> Double {

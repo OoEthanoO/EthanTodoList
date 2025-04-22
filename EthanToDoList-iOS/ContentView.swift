@@ -43,16 +43,18 @@ struct ContentView: View, ContentViewProtocol {
     @AppStorage("homeTime") var homeTime: Date = Date()
     @AppStorage("sleepTime") var sleepTime: Date = Date()
     @AppStorage("wakeUpTime") var wakeUpTime: Date = Date()
+    @AppStorage("todayWakeUpTime") var todayWakeUpTime: Date = Date()
     @AppStorage("offset") var offset: Int = 0
     @AppStorage("totalOffset") var totalOffset: Int = 0
     @AppStorage("halfTime") var halfTime: Bool = false
     @AppStorage("sleepTomorrow") var sleepTomorrow: Bool = false
-    @AppStorage("numbers168String") private var numbers168String: String = ""
+    @AppStorage("numbers28String") private var numbers28String: String = ""
+    @AppStorage("numbers24String") private var numbers24String: String = ""
     @AppStorage("numbers90String") private var numbers90String: String = ""
     @AppStorage("numbersGenerationDate") private var numbersGenerationDate: Date = Date()
     @AppStorage("isTomorrow") var isTomorrow: Bool = false
     @AppStorage("extra") var extra: Int = 0
-    @State private var pomodoroStreak: Int = 0
+    @AppStorage("pomodoroStreak") private var pomodoroStreak: Int = 0
     
     @ObservedObject var timerManager: TimerManager
     
@@ -105,8 +107,17 @@ struct ContentView: View, ContentViewProtocol {
             }
             .tag(1)
             
-            // Task Generator Tab
-            // Generator Tab (renamed from Assistant)
+            // Time Tab (new)
+            NavigationStack {
+                timeSplitsView
+                    .navigationTitle("Time Splits")
+            }
+            .tabItem {
+                Label("Time", systemImage: "clock")
+            }
+            .tag(2)
+            
+            // Generator Tab
             NavigationStack {
                 numberGeneratorView
                     .navigationTitle("Generator")
@@ -114,25 +125,15 @@ struct ContentView: View, ContentViewProtocol {
             .tabItem {
                 Label("Generator", systemImage: "dice")
             }
-            .tag(2)
-            
-            // Pomodoro Streak Tab (new)
-            NavigationStack {
-                pomodoroStreakView
-                    .navigationTitle("Streaks")
-            }
-            .tabItem {
-                Label("Streaks", systemImage: "flame")
-            }
             .tag(3)
             
-            // Settings Tab
+            // Data Tab
             NavigationStack {
-                settingsView
-                    .navigationTitle("Settings")
+                dataView
+                    .navigationTitle("Data")
             }
             .tabItem {
-                Label("Settings", systemImage: "gear")
+                Label("Data", systemImage: "chart.bar.doc.horizontal")
             }
             .tag(4)
         }
@@ -241,18 +242,12 @@ struct ContentView: View, ContentViewProtocol {
                 }
                 .padding(.horizontal)
                 
-                if !numbers168String.isEmpty {
-                    SimpleNumbersView(
-                        title: "Numbers (1-168):",
-                        numbers: numbers168String,
-                        lastGenerated: numbersGenerationDate
-                    )
-                }
-
-                if !numbers90String.isEmpty {
-                    SimpleNumbersView(
-                        title: "Numbers (1-90):",
-                        numbers: numbers90String,
+                if !numbers28String.isEmpty {
+                    // Replace the three SimpleNumbersView instances with this
+                    CombinedNumbersView(
+                        numbers28: numbers28String,
+                        numbers24: numbers24String,
+                        numbers90: numbers90String,
                         lastGenerated: numbersGenerationDate
                     )
                 }
@@ -386,67 +381,70 @@ struct ContentView: View, ContentViewProtocol {
                 DatePicker("Sleep Time", selection: $sleepTime, displayedComponents: .hourAndMinute)
                     .padding(.vertical, 4)
                 
-                Toggle("Sleep Tomorrow", isOn: $sleepTomorrow)
+                DatePicker("Wake Up Time", selection: $wakeUpTime, displayedComponents: .hourAndMinute)
                     .padding(.vertical, 4)
                 
-                Toggle("Is Tomorrow", isOn: $isTomorrow)
-                    .padding(.vertical, 4)
-                
-                HStack {
-                    Text("Offset")
-                    
-                    Spacer()
-                    
-                    VStack(spacing: 2) {
-                        Button("+100") {
-                            offset = min(offset + 100, 1440)
-                        }
-                        .buttonStyle(.plain)
-                        .frame(width: 100)
-                        .foregroundStyle(.blue)
-                        
-                        Button("+50") {
-                            offset = min(offset + 50, 1440)
-                        }
-                        .buttonStyle(.plain)
-                        .frame(width: 100)
-                        .foregroundStyle(.blue)
-                        
-                        Button("0") {
-                            offset = 0
-                        }
-                        .buttonStyle(.plain)
-                        .frame(width: 100)
-                        .foregroundStyle(.blue)
-                        
-                        Button("-50") {
-                            offset = max(offset - 50, 0)
-                        }
-                        .buttonStyle(.plain)
-                        .frame(width: 100)
-                        .foregroundStyle(.blue)
-                        
-                        Button("-100") {
-                            offset = max(offset - 100, 0)
-                        }
-                        .buttonStyle(.plain)
-                        .frame(width: 100)
-                        .foregroundStyle(.blue)
-                    }
-                    
-                    Spacer()
-                    
-                    Picker("", selection: $offset) {
-                        ForEach(0...1440, id: \.self) { value in
-                            Text("\(value)").tag(value)
-                        }
-                    }
-                    .pickerStyle(.wheel)
-                    .frame(width: 80, height: 100)
-                    .clipped()
-                    .labelsHidden()
-                }
-                .padding(.vertical, 4)
+//                Toggle("Sleep Tomorrow", isOn: $sleepTomorrow)
+//                    .padding(.vertical, 4)
+//                
+//                Toggle("Is Tomorrow", isOn: $isTomorrow)
+//                    .padding(.vertical, 4)
+//                
+//                HStack {
+//                    Text("Offset")
+//                    
+//                    Spacer()
+//                    
+//                    VStack(spacing: 2) {
+//                        Button("+100") {
+//                            offset = min(offset + 100, 1440)
+//                        }
+//                        .buttonStyle(.plain)
+//                        .frame(width: 100)
+//                        .foregroundStyle(.blue)
+//                        
+//                        Button("+50") {
+//                            offset = min(offset + 50, 1440)
+//                        }
+//                        .buttonStyle(.plain)
+//                        .frame(width: 100)
+//                        .foregroundStyle(.blue)
+//                        
+//                        Button("0") {
+//                            offset = 0
+//                        }
+//                        .buttonStyle(.plain)
+//                        .frame(width: 100)
+//                        .foregroundStyle(.blue)
+//                        
+//                        Button("-50") {
+//                            offset = max(offset - 50, 0)
+//                        }
+//                        .buttonStyle(.plain)
+//                        .frame(width: 100)
+//                        .foregroundStyle(.blue)
+//                        
+//                        Button("-100") {
+//                            offset = max(offset - 100, 0)
+//                        }
+//                        .buttonStyle(.plain)
+//                        .frame(width: 100)
+//                        .foregroundStyle(.blue)
+//                    }
+//                    
+//                    Spacer()
+//                    
+//                    Picker("", selection: $offset) {
+//                        ForEach(0...1440, id: \.self) { value in
+//                            Text("\(value)").tag(value)
+//                        }
+//                    }
+//                    .pickerStyle(.wheel)
+//                    .frame(width: 80, height: 100)
+//                    .clipped()
+//                    .labelsHidden()
+//                }
+//                .padding(.vertical, 4)
             }
             
             
@@ -699,22 +697,31 @@ struct ContentView: View, ContentViewProtocol {
         return middleTime!
     }
     
-    private func updateToToday(date: Date, tomorrow: Bool = false) -> Date {
-        // Implementation from macOS app
+    private func updateToToday(date: Date) -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute], from: date)
+        let now = Date()
+        let currentComponents = calendar.dateComponents([.hour, .minute], from: now)
         
-        if (tomorrow) {
-            return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: Date().addingTimeInterval(86400))!
+        // Check if time has already passed today
+        let timeHasPassed = components.hour! < currentComponents.hour! ||
+                          (components.hour! == currentComponents.hour! &&
+                           components.minute! <= currentComponents.minute!)
+        
+        // Set to tomorrow if explicitly requested or if the time has already passed today
+        if timeHasPassed {
+            return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: now.addingTimeInterval(86400))!
         }
-        return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: Date())!
+        
+        // Otherwise set to today
+        return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: now)!
     }
     
     private func getInformation() -> (Int, Date, Int, Date, Date) {
         // Copy your existing getInformation implementation
         // This is where you calculate code time, game time, etc.
         homeTime = updateToToday(date: homeTime)
-        sleepTime = updateToToday(date: sleepTime, tomorrow: sleepTomorrow)
+        sleepTime = updateToToday(date: sleepTime)
         
         // Add the rest of the implementation...
         // Simplified example:
@@ -729,12 +736,18 @@ struct ContentView: View, ContentViewProtocol {
     
     private func generateRandomNumbers() {
         // Generate 10 random numbers from 1 to 168
-        let randomNumbers168 = (0..<10).map { _ in
-            Int.random(in: 1...168)
+        let randomNumbers28 = (0..<10).map { _ in
+            Int.random(in: 1...28)
         }
-        numbers168String = randomNumbers168.map { "\($0)" }.joined(separator: ", ")
+        numbers28String = randomNumbers28.map { "\($0)" }.joined(separator: ", ")
         
         // Generate 10 random numbers from 1 to 90
+        let randomNumbers24 = (0..<10).map { _ in
+            Int.random(in: 1...24)
+            
+        }
+        numbers24String = randomNumbers24.map { "\($0)" }.joined(separator: ", ")
+        
         let randomNumbers90 = (0..<10).map { _ in
             Int.random(in: 1...90)
         }
@@ -754,9 +767,9 @@ struct ContentView: View, ContentViewProtocol {
     private func allocateTime() {
         let sum = getSum()
         
-        let calculationSleepTime = updateToToday(date: sleepTime, tomorrow: sleepTomorrow)
+        sleepTime = updateToToday(date: sleepTime)
         
-        let rightNow = updateToToday(date: Date(), tomorrow: isTomorrow)
+        let rightNow = Date()
         
         for item in items {
             if item.isDoneForToday! {
@@ -796,6 +809,440 @@ struct ContentView: View, ContentViewProtocol {
         } catch {
             print("Failed to save model context: \(error)")
         }
+    }
+    
+    private var dataView: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                // Time Settings section
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Time Settings")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    VStack(spacing: 0) {
+                        HStack {
+                            Text("Today Wake Up Time")
+                            Spacer()
+                            DatePicker("", selection: $todayWakeUpTime, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Sleep Time")
+                            Spacer()
+                            DatePicker("", selection: $sleepTime, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Tomorrow Wake Up Time")
+                            Spacer()
+                            DatePicker("", selection: $wakeUpTime, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                    }
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                }
+                
+                // Pomodoro Streak section (condensed version)
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Pomodoro Streak")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    VStack(spacing: 0) {
+                        HStack {
+                            Image(systemName: "flame.fill")
+                                .resizable()
+                                .frame(width: 20, height: 25)
+                                .foregroundStyle(.orange)
+                            
+                            Text("Current Streak")
+                                .font(.subheadline)
+                            
+                            Spacer()
+                            
+                            HStack(spacing: 15) {
+                                Button(action: {
+                                    if pomodoroStreak > 0 {
+                                        withAnimation {
+                                            pomodoroStreak -= 1
+                                        }
+                                    }
+                                }) {
+                                    Image(systemName: "minus.circle.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.blue)
+                                }
+                                
+                                Text("\(pomodoroStreak)")
+                                    .font(.title2.bold())
+                                    .frame(minWidth: 30)
+                                
+                                Button(action: {
+                                    withAnimation {
+                                        pomodoroStreak += 1
+                                    }
+                                }) {
+                                    Image(systemName: "plus.circle.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        
+                        Divider()
+                        
+                        Button(action: {
+                            pomodoroStreak = 0
+                        }) {
+                            Text("Reset Streak")
+                                .foregroundColor(.red)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                    }
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                }
+                
+                // Quick Pomodoro Tip
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Pomodoro Technique")
+                        .font(.headline)
+                    
+                    Text("Work for 25 minutes, then take a 5 minute break. After 4 sessions, take a longer 15-30 minute break.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(10)
+                .padding(.horizontal)
+            }
+            .padding(.vertical)
+        }
+    }
+    
+    private var timeSplitsView: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                // Wake up to Wake up section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Wake Up to Wake Up")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    VStack(spacing: 0) {
+                        // Today's wake-up time
+                        HStack {
+                            Image(systemName: "sunrise")
+                                .foregroundColor(.orange)
+                                .frame(width: 30)
+                            
+                            Text("Today")
+                                .foregroundColor(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(formatTime(todayWakeUpTime))
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.primary)
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        
+                        Divider()
+                        
+                        // Half-way point
+                        HStack {
+                            Image(systemName: "arrow.up.and.down")
+                                .foregroundColor(.purple)
+                                .frame(width: 30)
+                            
+                            Text("Half Time")
+                                .foregroundColor(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(formatTime(calculateMidPoint(todayWakeUpTime, wakeUpTime.addingTimeInterval(24*60*60))))
+                                .font(.system(.body, design: .monospaced))
+                                .bold()
+                                .foregroundColor(.purple)
+                        }
+                        .padding()
+                        .background(Color(.systemBackground).opacity(0.8))
+                        
+                        Divider()
+                        
+                        // Tomorrow's wake-up time
+                        HStack {
+                            Image(systemName: "sunrise")
+                                .foregroundColor(.orange)
+                                .frame(width: 30)
+                            
+                            Text("Tomorrow")
+                                .foregroundColor(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(formatTime(wakeUpTime))
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.primary)
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                    }
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.purple.opacity(0.3), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                }
+                
+                // Wake up to Sleep section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Wake Up to Sleep")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    VStack(spacing: 0) {
+                        // Today's wake-up time
+                        HStack {
+                            Image(systemName: "sunrise")
+                                .foregroundColor(.orange)
+                                .frame(width: 30)
+                            
+                            Text("Wake Up")
+                                .foregroundColor(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(formatTime(todayWakeUpTime))
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.primary)
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        
+                        Divider()
+                        
+                        // Use adjusted sleep time for calculations
+                        let adjustedSleepTime = getAdjustedSleepTime(from: wakeUpTime)
+                        
+                        // Double split
+                        VStack(spacing: 12) {
+                            HStack {
+                                Image(systemName: "2.circle.fill")
+                                    .foregroundColor(.green)
+                                    .frame(width: 30)
+                                
+                                Text("Double Split")
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 100, alignment: .leading)
+                                
+                                Spacer()
+                                
+                                let doubleSplits = calculateDoubleSplit(todayWakeUpTime, adjustedSleepTime)
+                                Text(formatTime(doubleSplits.0))
+                                    .font(.system(.body, design: .monospaced))
+                                    .bold()
+                                    .foregroundColor(.green)
+                            }
+                            
+                            HStack {
+                                Image(systemName: "")
+                                    .frame(width: 30)
+                                
+                                Text("")
+                                    .frame(width: 100, alignment: .leading)
+                                
+                                Spacer()
+                                
+                                let doubleSplits = calculateDoubleSplit(todayWakeUpTime, adjustedSleepTime)
+                                Text(formatTime(doubleSplits.1))
+                                    .font(.system(.body, design: .monospaced))
+                                    .bold()
+                                    .foregroundColor(.green)
+                            }
+                        }
+                        .padding()
+                        .background(Color(.systemBackground).opacity(0.8))
+                        
+                        Divider()
+                        
+                        // Triple split - also using adjusted sleep time
+                        VStack(spacing: 12) {
+                            HStack {
+                                Image(systemName: "3.circle.fill")
+                                    .foregroundColor(.red)
+                                    .frame(width: 30)
+                                
+                                Text("Triple Split")
+                                    .foregroundColor(.secondary)
+                                    .frame(width: 100, alignment: .leading)
+                                
+                                Spacer()
+                                
+                                let tripleSplits = calculateTripleSplit(todayWakeUpTime, adjustedSleepTime)
+                                Text(formatTime(tripleSplits.0))
+                                    .font(.system(.body, design: .monospaced))
+                                    .bold()
+                                    .foregroundColor(.red)
+                            }
+                            
+                            HStack {
+                                Image(systemName: "")
+                                    .frame(width: 30)
+                                
+                                Text("")
+                                    .frame(width: 100, alignment: .leading)
+                                
+                                Spacer()
+                                
+                                let tripleSplits = calculateTripleSplit(todayWakeUpTime, adjustedSleepTime)
+                                Text(formatTime(tripleSplits.1))
+                                    .font(.system(.body, design: .monospaced))
+                                    .bold()
+                                    .foregroundColor(.red)
+                            }
+                            
+                            HStack {
+                                Image(systemName: "")
+                                    .frame(width: 30)
+                                
+                                Text("")
+                                    .frame(width: 100, alignment: .leading)
+                                
+                                Spacer()
+                                
+                                let tripleSplits = calculateTripleSplit(todayWakeUpTime, adjustedSleepTime)
+                                Text(formatTime(tripleSplits.2))
+                                    .font(.system(.body, design: .monospaced))
+                                    .bold()
+                                    .foregroundColor(.red)
+                            }
+                        }
+                        .padding()
+                        .background(Color(.systemBackground).opacity(0.8))
+                        
+                        Divider()
+                        
+                        // Sleep time
+                        HStack {
+                            Image(systemName: "moon.fill")
+                                .foregroundColor(.indigo)
+                                .frame(width: 30)
+                            
+                            Text("Sleep")
+                                .foregroundColor(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(formatTime(sleepTime))
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.primary)
+                            
+                            // Show indicator if sleep time is considered next day
+                            if Calendar.current.dateComponents([.hour, .minute], from: todayWakeUpTime).hour! >
+                               Calendar.current.dateComponents([.hour, .minute], from: sleepTime).hour! {
+                                Text("(next day)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                    }
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                }
+            }
+            .padding(.vertical)
+        }
+    }
+
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        return formatter.string(from: date)
+    }
+
+    private func calculateMidPoint(_ startDate: Date, _ endDate: Date) -> Date {
+        let timeInterval = endDate.timeIntervalSince(startDate) / 2.0
+        return startDate.addingTimeInterval(timeInterval)
+    }
+
+    // New helper to get adjusted sleep time for calculations
+    private func getAdjustedSleepTime(from wakeUpTime: Date) -> Date {
+        // Extract hour and minute components
+        let calendar = Calendar.current
+        let sleepComponents = calendar.dateComponents([.hour, .minute], from: sleepTime)
+        let wakeUpComponents = calendar.dateComponents([.hour, .minute], from: wakeUpTime)
+        
+        // Create base date with today's date
+        var sleepTimeDate = calendar.startOfDay(for: Date())
+        
+        // Set the hour and minute from sleepTime
+        sleepTimeDate = calendar.date(bySettingHour: sleepComponents.hour!, minute: sleepComponents.minute!, second: 0, of: sleepTimeDate)!
+        
+        // For the wake up time (wakeUpTime parameter):
+        // If the wake up time is in AM hours (0-11), it's considered tomorrow
+        // If the wake up time is in PM hours (12-23), it's considered today
+        if sleepComponents.hour! > wakeUpComponents.hour! { // Second condition ensures it's actually the tomorrow wakeup parameter
+            sleepTimeDate = calendar.date(byAdding: .day, value: -1, to: sleepTimeDate)!
+        }
+        
+        return sleepTimeDate
+    }
+
+    private func calculateHalfSplit(_ startDate: Date, _ endDate: Date) -> Date {
+        return calculateMidPoint(startDate, endDate)
+    }
+
+    private func calculateDoubleSplit(_ startDate: Date, _ endDate: Date) -> (Date, Date) {
+        let totalInterval = endDate.timeIntervalSince(startDate)
+        let firstSplit = startDate.addingTimeInterval(totalInterval / 3.0)
+        let secondSplit = startDate.addingTimeInterval(2 * totalInterval / 3.0)
+        return (firstSplit, secondSplit)
+    }
+
+    private func calculateTripleSplit(_ startDate: Date, _ endDate: Date) -> (Date, Date, Date) {
+        let totalInterval = endDate.timeIntervalSince(startDate)
+        let firstSplit = startDate.addingTimeInterval(totalInterval / 4.0)
+        let secondSplit = startDate.addingTimeInterval(2 * totalInterval / 4.0)
+        let thirdSplit = startDate.addingTimeInterval(3 * totalInterval / 4.0)
+        return (firstSplit, secondSplit, thirdSplit)
     }
     
 //    private func loadSavedNumbers() {

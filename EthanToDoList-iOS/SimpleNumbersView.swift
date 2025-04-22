@@ -29,7 +29,7 @@ struct SimpleNumbersView: View {
                 .font(.headline)
             
             Text(numbers)
-                .font(.system(.title3, design: .monospaced))
+                .font(.system(.title3, design: .rounded))
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(
