@@ -697,7 +697,7 @@ struct ContentView: View, ContentViewProtocol {
         return middleTime!
     }
     
-    private func updateToToday(date: Date) -> Date {
+    private func updateToToday(date: Date, important: Bool = true) -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute], from: date)
         let now = Date()
@@ -709,7 +709,7 @@ struct ContentView: View, ContentViewProtocol {
                            components.minute! <= currentComponents.minute!)
         
         // Set to tomorrow if explicitly requested or if the time has already passed today
-        if timeHasPassed {
+        if !important && timeHasPassed {
             return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: now.addingTimeInterval(86400))!
         }
         
@@ -1199,8 +1199,9 @@ struct ContentView: View, ContentViewProtocol {
     }
 
     private func calculateMidPoint(_ startDate: Date, _ endDate: Date) -> Date {
-        let timeInterval = endDate.timeIntervalSince(startDate) / 2.0
-        return startDate.addingTimeInterval(timeInterval)
+        let todayStartDate = updateToToday(date: startDate, important: true)
+        let timeInterval = endDate.timeIntervalSince(todayStartDate) / 2.0
+        return todayStartDate.addingTimeInterval(timeInterval)
     }
 
     // New helper to get adjusted sleep time for calculations
@@ -1219,8 +1220,8 @@ struct ContentView: View, ContentViewProtocol {
         // For the wake up time (wakeUpTime parameter):
         // If the wake up time is in AM hours (0-11), it's considered tomorrow
         // If the wake up time is in PM hours (12-23), it's considered today
-        if sleepComponents.hour! > wakeUpComponents.hour! { // Second condition ensures it's actually the tomorrow wakeup parameter
-            sleepTimeDate = calendar.date(byAdding: .day, value: -1, to: sleepTimeDate)!
+        if sleepComponents.hour! <= wakeUpComponents.hour! { // Second condition ensures it's actually the tomorrow wakeup parameter
+            sleepTimeDate = calendar.date(byAdding: .day, value: 1, to: sleepTimeDate)!
         }
         
         return sleepTimeDate
@@ -1231,17 +1232,19 @@ struct ContentView: View, ContentViewProtocol {
     }
 
     private func calculateDoubleSplit(_ startDate: Date, _ endDate: Date) -> (Date, Date) {
-        let totalInterval = endDate.timeIntervalSince(startDate)
-        let firstSplit = startDate.addingTimeInterval(totalInterval / 3.0)
-        let secondSplit = startDate.addingTimeInterval(2 * totalInterval / 3.0)
+        let todayStartDate = updateToToday(date: startDate, important: true)
+        let totalInterval = endDate.timeIntervalSince(todayStartDate)
+        let firstSplit = todayStartDate.addingTimeInterval(totalInterval / 3.0)
+        let secondSplit = todayStartDate.addingTimeInterval(2 * totalInterval / 3.0)
         return (firstSplit, secondSplit)
     }
 
     private func calculateTripleSplit(_ startDate: Date, _ endDate: Date) -> (Date, Date, Date) {
-        let totalInterval = endDate.timeIntervalSince(startDate)
-        let firstSplit = startDate.addingTimeInterval(totalInterval / 4.0)
-        let secondSplit = startDate.addingTimeInterval(2 * totalInterval / 4.0)
-        let thirdSplit = startDate.addingTimeInterval(3 * totalInterval / 4.0)
+        let todayStartDate = updateToToday(date: startDate, important: true)
+        let totalInterval = endDate.timeIntervalSince(todayStartDate)
+        let firstSplit = todayStartDate.addingTimeInterval(totalInterval / 4.0)
+        let secondSplit = todayStartDate.addingTimeInterval(2 * totalInterval / 4.0)
+        let thirdSplit = todayStartDate.addingTimeInterval(3 * totalInterval / 4.0)
         return (firstSplit, secondSplit, thirdSplit)
     }
     
