@@ -697,7 +697,7 @@ struct ContentView: View, ContentViewProtocol {
         return middleTime!
     }
     
-    private func updateToToday(date: Date, important: Bool = true) -> Date {
+    private func updateToToday(date: Date, important: Bool = false, tomorrow: Bool = false) -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute], from: date)
         let now = Date()
@@ -709,7 +709,7 @@ struct ContentView: View, ContentViewProtocol {
                            components.minute! <= currentComponents.minute!)
         
         // Set to tomorrow if explicitly requested or if the time has already passed today
-        if !important && timeHasPassed {
+        if tomorrow || (!important && timeHasPassed) {
             return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: 0, of: now.addingTimeInterval(86400))!
         }
         
@@ -1200,7 +1200,8 @@ struct ContentView: View, ContentViewProtocol {
 
     private func calculateMidPoint(_ startDate: Date, _ endDate: Date) -> Date {
         let todayStartDate = updateToToday(date: startDate, important: true)
-        let timeInterval = endDate.timeIntervalSince(todayStartDate) / 2.0
+        let tomorrowEndDate = updateToToday(date: startDate, tomorrow: true)
+        let timeInterval = tomorrowEndDate.timeIntervalSince(todayStartDate) / 2.0
         return todayStartDate.addingTimeInterval(timeInterval)
     }
 
