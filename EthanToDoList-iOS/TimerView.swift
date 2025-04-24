@@ -2,6 +2,13 @@ import SwiftUI
 import SwiftData
 import Combine
 
+enum TaskSelectionMode: String, CaseIterable, Identifiable {
+    case highestOrder = "Priority Order"
+    case highestTime = "Highest Time"
+    
+    var id: String { self.rawValue }
+}
+
 // For persistent timer storage
 class TimerManager: ObservableObject {
     @Published var isRunning = false
@@ -9,6 +16,7 @@ class TimerManager: ObservableObject {
     @Published var endTime: Date?
     @Published var currentTask: Item?
     @Published var showCompletionSheet = false
+    @Published var taskSelectionMode: TaskSelectionMode = .highestOrder
     
     @Query private var items: [Item]
     
@@ -47,17 +55,25 @@ class TimerManager: ObservableObject {
     func startTimer() {
         guard let modelContext = modelContext, !isRunning else { return }
         
-//        allocateTimeHandler?()
+        // Define sort descriptors based on selection mode
+        var sortDescriptors: [SortDescriptor<Item>]
         
-//        allocateTime()
+        switch taskSelectionMode {
+        case .highestOrder:
+            sortDescriptors = [SortDescriptor(\.temporaryOrder)]
+        case .highestTime:
+            sortDescriptors = [
+                SortDescriptor(\.currentMinutes, order: .reverse),
+                SortDescriptor(\.temporaryOrder)
+            ]
+        }
         
-        
-        // Find task with lowest temporaryOrder that isn't completed or done for today
+        // Find task based on selected criteria
         let descriptor = FetchDescriptor<Item>(
             predicate: #Predicate { item in
                 !item.isCompleted && !(item.isDoneForToday ?? false) && ((item.currentMinutes ?? 0) != 0)
             },
-            sortBy: [SortDescriptor(\.temporaryOrder)]
+            sortBy: sortDescriptors
         )
         
         guard let tasks = try? modelContext.fetch(descriptor), let task = tasks.first else {
@@ -357,6 +373,29 @@ struct TimerView: View {
     
     var body: some View {
         VStack {
+            Picker("Task Selection", selection: $timerManager.taskSelectionMode) {
+                ForEach(TaskSelectionMode.allCases) { mode in
+                    Text(mode.rawValue).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            
+            Group {
+                if timerManager.taskSelectionMode == .highestOrder {
+                    Text("Selecting tasks in priority order")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } else {
+                    Text("Selecting tasks with highest time allocation")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 4)
+            
             // Task info area
             if let task = timerManager.currentTask {
                 taskInfoView(task: task)
