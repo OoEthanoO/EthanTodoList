@@ -561,14 +561,48 @@ struct ContentView: View, ContentViewProtocol {
     
     private func addItem() {
         withAnimation {
+            // Create the new item
             let newItem = Item(name: newTaskTitle, dueDate: newTaskDueDate,
                              isForSchool: newTaskForSchool, isCompleted: false)
-            // Set temporaryOrder to place at the end
-            newItem.temporaryOrder = items.count
+                             
+            // Find the position where the new item should be inserted based on due date
+            var insertPosition = items.count // Default to end
+            
+            // Get items sorted by their current temporary order
+            let orderedItems = items.sorted(by: { $0.temporaryOrder < $1.temporaryOrder })
+            
+            for (index, item) in orderedItems.enumerated() {
+                if removeHours(from: newTaskDueDate) < removeHours(from: item.dueDate) {
+                    // Found a task with a later due date, insert before this one
+                    insertPosition = index
+                    break
+                }
+            }
+            
+            // Shift temporaryOrder of all items at or after the insertion position
+            for item in items {
+                if item.temporaryOrder >= insertPosition {
+                    item.temporaryOrder += 1
+                }
+            }
+            
+            // Set the new item's temporaryOrder to the insertion position
+            newItem.temporaryOrder = insertPosition
+            
+            // Insert the new item
             modelContext.insert(newItem)
+            
+            // Reset form fields
             newTaskTitle = ""
             newTaskDueDate = Date()
             newTaskForSchool = true
+            
+            // Save changes to ensure consistent state
+            do {
+                try modelContext.save()
+            } catch {
+                print("Failed to save model context after adding item: \(error)")
+            }
         }
     }
     
@@ -989,7 +1023,7 @@ struct ContentView: View, ContentViewProtocol {
                             
                             Spacer()
                             
-                            Text(formatTime(calculateMidPoint(todayWakeUpTime, wakeUpTime.addingTimeInterval(24*60*60))))
+                            Text(formatTime(calculateMidPoint(todayWakeUpTime, wakeUpTime)))
                                 .font(.system(.body, design: .monospaced))
                                 .bold()
                                 .foregroundColor(.purple)
@@ -1200,7 +1234,7 @@ struct ContentView: View, ContentViewProtocol {
 
     private func calculateMidPoint(_ startDate: Date, _ endDate: Date) -> Date {
         let todayStartDate = updateToToday(date: startDate, important: true)
-        let tomorrowEndDate = updateToToday(date: startDate, tomorrow: true)
+        let tomorrowEndDate = updateToToday(date: endDate, tomorrow: true)
         let timeInterval = tomorrowEndDate.timeIntervalSince(todayStartDate) / 2.0
         return todayStartDate.addingTimeInterval(timeInterval)
     }

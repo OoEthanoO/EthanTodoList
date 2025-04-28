@@ -206,8 +206,8 @@
             filePath = "EthanToDoList-iOS/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "708"
-            endingLineNumber = "708"
+            startingLineNumber = "742"
+            endingLineNumber = "742"
             landmarkName = "updateToToday(date:important:tomorrow:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "EthanToDoList-iOS/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1224"
-            endingLineNumber = "1224"
+            startingLineNumber = "1258"
+            endingLineNumber = "1258"
             landmarkName = "getAdjustedSleepTime(from:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "EthanToDoList-iOS/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1237"
-            endingLineNumber = "1237"
+            startingLineNumber = "1271"
+            endingLineNumber = "1271"
             landmarkName = "calculateDoubleSplit(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,8 +254,8 @@
             filePath = "EthanToDoList-iOS/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1245"
-            endingLineNumber = "1245"
+            startingLineNumber = "1279"
+            endingLineNumber = "1279"
             landmarkName = "calculateTripleSplit(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
