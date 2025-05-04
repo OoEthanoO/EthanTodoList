@@ -8,16 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		8106F87D2BD680F0000F1B7C /* EthanTodoListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8106F87C2BD680F0000F1B7C /* EthanTodoListApp.swift */; };
-		8106F87F2BD680F0000F1B7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8106F87E2BD680F0000F1B7C /* ContentView.swift */; };
 		8106F8812BD680F0000F1B7C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8106F8802BD680F0000F1B7C /* Item.swift */; };
 		8106F8832BD680F1000F1B7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8106F8822BD680F1000F1B7C /* Assets.xcassets */; };
 		8106F8862BD680F1000F1B7C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8106F8852BD680F1000F1B7C /* Preview Assets.xcassets */; };
-		810999112BDAF26F0012C5BD /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810999102BDAF26F0012C5BD /* CustomDatePicker.swift */; };
-		810F8BD02D0B74860014A2E8 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F8BCF2D0B74740014A2E8 /* TimerView.swift */; };
-		813DB5722D0B8070000B913A /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813DB5712D0B8066000B913A /* LogView.swift */; };
-		813DB5742D0B80A5000B913A /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813DB5732D0B80A1000B913A /* LogManager.swift */; };
-		81AE6ABF2BDAE3A500E300E9 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */; };
-		81FF6F1F2D0D2ECB007F654C /* Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FF6F1E2D0D2ECB007F654C /* Class.swift */; };
+		810F93C52DC1A49000A0088D /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93C42DC1A48D00A0088D /* MainView.swift */; };
+		810F93C72DC1A49700A0088D /* Sidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93C62DC1A49600A0088D /* Sidebar.swift */; };
+		810F93CB2DC1A4A900A0088D /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93CA2DC1A4A800A0088D /* TaskListView.swift */; };
+		810F93CD2DC1A4B700A0088D /* MacTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93CC2DC1A4B500A0088D /* MacTimerView.swift */; };
+		810F93CF2DC1A4C100A0088D /* MacTimerCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93CE2DC1A4BE00A0088D /* MacTimerCompletionView.swift */; };
+		810F93D12DC1A4CA00A0088D /* NumberGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93D02DC1A4CA00A0088D /* NumberGeneratorView.swift */; };
+		810F93D32DC1A4D700A0088D /* TimeSplitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93D22DC1A4D500A0088D /* TimeSplitsView.swift */; };
+		810F93D52DC1A4E000A0088D /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93D42DC1A4DE00A0088D /* DataView.swift */; };
+		810F93D72DC1A4F800A0088D /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93D62DC1A4F700A0088D /* AddTaskView.swift */; };
+		810F93D92DC1A50000A0088D /* TimeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93D82DC1A4FE00A0088D /* TimeSettingsView.swift */; };
+		810F93DB2DC1A71600A0088D /* TimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93DA2DC1A71500A0088D /* TimerManager.swift */; };
+		810F93DD2DC1A71F00A0088D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93DC2DC1A71D00A0088D /* SettingsView.swift */; };
+		810F93DF2DC1A7E700A0088D /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810F93DE2DC1A7E500A0088D /* DatePickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,22 +59,28 @@
 /* Begin PBXFileReference section */
 		8106F8792BD680F0000F1B7C /* EthanTodoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EthanTodoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8106F87C2BD680F0000F1B7C /* EthanTodoListApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthanTodoListApp.swift; sourceTree = "<group>"; };
-		8106F87E2BD680F0000F1B7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8106F8802BD680F0000F1B7C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		8106F8822BD680F1000F1B7C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8106F8852BD680F1000F1B7C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8106F8872BD680F1000F1B7C /* EthanTodoList.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EthanTodoList.entitlements; sourceTree = "<group>"; };
-		810999102BDAF26F0012C5BD /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
-		810F8BCF2D0B74740014A2E8 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
-		813DB5712D0B8066000B913A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
-		813DB5732D0B80A1000B913A /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
+		810F93C42DC1A48D00A0088D /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		810F93C62DC1A49600A0088D /* Sidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sidebar.swift; sourceTree = "<group>"; };
+		810F93CA2DC1A4A800A0088D /* TaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListView.swift; sourceTree = "<group>"; };
+		810F93CC2DC1A4B500A0088D /* MacTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacTimerView.swift; sourceTree = "<group>"; };
+		810F93CE2DC1A4BE00A0088D /* MacTimerCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacTimerCompletionView.swift; sourceTree = "<group>"; };
+		810F93D02DC1A4CA00A0088D /* NumberGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberGeneratorView.swift; sourceTree = "<group>"; };
+		810F93D22DC1A4D500A0088D /* TimeSplitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSplitsView.swift; sourceTree = "<group>"; };
+		810F93D42DC1A4DE00A0088D /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
+		810F93D62DC1A4F700A0088D /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
+		810F93D82DC1A4FE00A0088D /* TimeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSettingsView.swift; sourceTree = "<group>"; };
+		810F93DA2DC1A71500A0088D /* TimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerManager.swift; sourceTree = "<group>"; };
+		810F93DC2DC1A71D00A0088D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		810F93DE2DC1A7E500A0088D /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		815A0D8A2DAA061C00507EDF /* EthanToDoList-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EthanToDoList-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		815A0D9B2DAA061D00507EDF /* EthanToDoList-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EthanToDoList-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		815A0DA52DAA061D00507EDF /* EthanToDoList-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EthanToDoList-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		81EB7A862DACBE2200A4C26C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		81EB7A882DACBE2200A4C26C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		81FF6F1E2D0D2ECB007F654C /* Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Class.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -145,18 +157,24 @@
 		8106F87B2BD680F0000F1B7C /* EthanTodoList */ = {
 			isa = PBXGroup;
 			children = (
-				813DB5732D0B80A1000B913A /* LogManager.swift */,
-				813DB5712D0B8066000B913A /* LogView.swift */,
-				810F8BCF2D0B74740014A2E8 /* TimerView.swift */,
+				810F93DE2DC1A7E500A0088D /* DatePickerView.swift */,
+				810F93DC2DC1A71D00A0088D /* SettingsView.swift */,
+				810F93DA2DC1A71500A0088D /* TimerManager.swift */,
+				810F93D82DC1A4FE00A0088D /* TimeSettingsView.swift */,
+				810F93D62DC1A4F700A0088D /* AddTaskView.swift */,
+				810F93D42DC1A4DE00A0088D /* DataView.swift */,
+				810F93D22DC1A4D500A0088D /* TimeSplitsView.swift */,
+				810F93D02DC1A4CA00A0088D /* NumberGeneratorView.swift */,
+				810F93CE2DC1A4BE00A0088D /* MacTimerCompletionView.swift */,
+				810F93CC2DC1A4B500A0088D /* MacTimerView.swift */,
+				810F93CA2DC1A4A800A0088D /* TaskListView.swift */,
+				810F93C62DC1A49600A0088D /* Sidebar.swift */,
+				810F93C42DC1A48D00A0088D /* MainView.swift */,
 				8106F87C2BD680F0000F1B7C /* EthanTodoListApp.swift */,
-				8106F87E2BD680F0000F1B7C /* ContentView.swift */,
 				8106F8802BD680F0000F1B7C /* Item.swift */,
-				81FF6F1E2D0D2ECB007F654C /* Class.swift */,
 				8106F8822BD680F1000F1B7C /* Assets.xcassets */,
 				8106F8872BD680F1000F1B7C /* EthanTodoList.entitlements */,
 				8106F8842BD680F1000F1B7C /* Preview Content */,
-				81AE6ABE2BDAE3A500E300E9 /* ItemView.swift */,
-				810999102BDAF26F0012C5BD /* CustomDatePicker.swift */,
 			);
 			path = EthanTodoList;
 			sourceTree = "<group>";
@@ -352,15 +370,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81FF6F1F2D0D2ECB007F654C /* Class.swift in Sources */,
-				813DB5742D0B80A5000B913A /* LogManager.swift in Sources */,
-				810F8BD02D0B74860014A2E8 /* TimerView.swift in Sources */,
-				810999112BDAF26F0012C5BD /* CustomDatePicker.swift in Sources */,
-				8106F87F2BD680F0000F1B7C /* ContentView.swift in Sources */,
+				810F93D92DC1A50000A0088D /* TimeSettingsView.swift in Sources */,
+				810F93D12DC1A4CA00A0088D /* NumberGeneratorView.swift in Sources */,
+				810F93D72DC1A4F800A0088D /* AddTaskView.swift in Sources */,
+				810F93C52DC1A49000A0088D /* MainView.swift in Sources */,
+				810F93D52DC1A4E000A0088D /* DataView.swift in Sources */,
+				810F93DD2DC1A71F00A0088D /* SettingsView.swift in Sources */,
+				810F93DB2DC1A71600A0088D /* TimerManager.swift in Sources */,
 				8106F8812BD680F0000F1B7C /* Item.swift in Sources */,
+				810F93DF2DC1A7E700A0088D /* DatePickerView.swift in Sources */,
+				810F93D32DC1A4D700A0088D /* TimeSplitsView.swift in Sources */,
 				8106F87D2BD680F0000F1B7C /* EthanTodoListApp.swift in Sources */,
-				81AE6ABF2BDAE3A500E300E9 /* ItemView.swift in Sources */,
-				813DB5722D0B8070000B913A /* LogView.swift in Sources */,
+				810F93C72DC1A49700A0088D /* Sidebar.swift in Sources */,
+				810F93CD2DC1A4B700A0088D /* MacTimerView.swift in Sources */,
+				810F93CF2DC1A4C100A0088D /* MacTimerCompletionView.swift in Sources */,
+				810F93CB2DC1A4A900A0088D /* TaskListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,7 +553,7 @@
 				CODE_SIGN_ENTITLEMENTS = EthanTodoList/EthanTodoList.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanTodoList/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
@@ -542,7 +566,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethanxu.EthanTodoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -559,7 +583,7 @@
 				CODE_SIGN_ENTITLEMENTS = EthanTodoList/EthanTodoList.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanTodoList/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
@@ -572,7 +596,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethanxu.EthanTodoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -587,7 +611,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanToDoList-iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
 				ENABLE_PREVIEWS = YES;
@@ -621,7 +645,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"EthanToDoList-iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = J679C73527;
 				ENABLE_PREVIEWS = YES;
@@ -655,7 +679,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = J679C73527;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
@@ -675,7 +699,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = J679C73527;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
@@ -695,7 +719,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = J679C73527;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
@@ -714,7 +738,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = J679C73527;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;

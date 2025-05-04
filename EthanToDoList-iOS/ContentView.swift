@@ -110,7 +110,7 @@ struct ContentView: View, ContentViewProtocol {
             // Time Tab (new)
             NavigationStack {
                 timeSplitsView
-                    .navigationTitle("Time Splits")
+//                    .navigationTitle("Time Splits")
             }
             .tabItem {
                 Label("Time", systemImage: "clock")
@@ -985,6 +985,26 @@ struct ContentView: View, ContentViewProtocol {
     private var timeSplitsView: some View {
         ScrollView {
             VStack(spacing: 24) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Today's Progress")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    VStack(spacing: 0) {
+                        DayProgressBar(
+                            wakeUpTime: todayWakeUpTime,
+                            sleepTime: sleepTime
+                        )
+                        .frame(height: 90)
+                    }
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                }
+                
                 // Wake up to Wake up section
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Wake Up to Wake Up")
@@ -1292,6 +1312,178 @@ struct ContentView: View, ContentViewProtocol {
 //        }
 //    }
 }
+
+struct DayProgressBar: View {
+    let wakeUpTime: Date
+    let sleepTime: Date
+    
+    @State private var currentTime = Date()
+    @State private var timer: Timer?
+    
+    // Lifecycle management
+    func startTimer() {
+        // Invalidate any existing timer first
+        stopTimer()
+        
+        // Update time immediately
+        currentTime = Date()
+        
+        // Calculate seconds until the next minute begins
+        let calendar = Calendar.current
+        let currentSeconds = calendar.component(.second, from: Date())
+        let secondsUntilNextMinute = 60.0 - Double(currentSeconds)
+        
+        // Schedule initial timer to fire at the next minute boundary
+        timer = Timer.scheduledTimer(withTimeInterval: secondsUntilNextMinute, repeats: false) { [self] _ in
+            // Update time
+            currentTime = Date()
+            
+            // Now setup a timer that fires exactly on minute boundaries
+            self.timer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { _ in
+                self.currentTime = Date()
+            }
+            
+            // Add the timer to the common run loop mode to ensure it fires even during scrolling
+            RunLoop.current.add(self.timer!, forMode: .common)
+        }
+        
+        // Add the initial timer to the common run loop mode
+        RunLoop.current.add(timer!, forMode: .common)
+    }
+    
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            // Current time display
+            Text(timeFormatter.string(from: currentTime))
+                .font(.system(.title2, design: .monospaced))
+                .fontWeight(.bold)
+            
+            // Progress bar
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    // Background bar
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(width: geometry.size.width, height: 16)
+                    
+                    // Progress bar
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(
+                            LinearGradient(
+                                gradient: Gradient(colors: [.blue, .purple]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .frame(width: geometry.size.width * progress, height: 16)
+                    
+                    // Current time marker
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 22, height: 22)
+                        .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.purple, lineWidth: 3)
+                        )
+                        .offset(x: (geometry.size.width * progress) - 11)
+                }
+            }
+            .frame(height: 22)
+            
+            // Time labels
+            HStack {
+                Text(timeFormatter.string(from: wakeUpTime))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Spacer()
+                
+                Text("\(Int(progress * 100))% of day")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .fontWeight(.medium)
+                
+                Spacer()
+                
+                Text(timeFormatter.string(from: sleepTime))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+        )
+        .onAppear {
+            // Start the timer when the view appears
+            currentTime = Date()
+            startTimer()
+            
+            // Add observer for when app returns to foreground
+            NotificationCenter.default.addObserver(
+                forName: UIApplication.willEnterForegroundNotification,
+                object: nil,
+                queue: .main
+            ) { _ in
+                // Update time and restart timer when app comes to foreground
+                currentTime = Date()
+                startTimer()
+            }
+        }
+        .onDisappear {
+            // Remove the observer and stop the timer when view disappears
+            NotificationCenter.default.removeObserver(
+                self,
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
+            stopTimer()
+        }
+    }
+    
+    // Calculate progress percentage
+    private var progress: Double {
+        let calendar = Calendar.current
+        
+        // Today's wake-up with today's date
+        let todayComponents = calendar.dateComponents([.year, .month, .day], from: Date())
+        let wakeComponents = calendar.dateComponents([.hour, .minute], from: wakeUpTime)
+        let startDate = calendar.date(bySettingHour: wakeComponents.hour!, minute: wakeComponents.minute!, second: 0, of: calendar.date(from: todayComponents)!)!
+        
+        // Sleep time might be tomorrow if it's earlier than wake time
+        var endComponents = calendar.dateComponents([.hour, .minute], from: sleepTime)
+        var endDate = calendar.date(bySettingHour: endComponents.hour!, minute: endComponents.minute!, second: 0, of: calendar.date(from: todayComponents)!)!
+        
+        // If sleep time is earlier in the day than wake time, it's likely tomorrow
+        if endDate < startDate {
+            endDate = calendar.date(byAdding: .day, value: 1, to: endDate)!
+        }
+        
+        // Calculate where current time is in this range
+        let totalSeconds = endDate.timeIntervalSince(startDate)
+        let elapsedSeconds = min(max(0, currentTime.timeIntervalSince(startDate)), totalSeconds)
+        
+        return totalSeconds > 0 ? elapsedSeconds / totalSeconds : 0
+    }
+    
+    // Time formatter
+    private let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        return formatter
+    }()
+}
+
 
 //#Preview {
 //    ContentView()

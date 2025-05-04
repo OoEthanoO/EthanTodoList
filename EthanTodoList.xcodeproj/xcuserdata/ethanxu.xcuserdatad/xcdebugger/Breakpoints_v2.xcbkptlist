@@ -200,7 +200,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "6DA2B1F0-4167-40A4-9238-BF6D48AEEAE0"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "EthanToDoList-iOS/ContentView.swift"
@@ -222,8 +222,8 @@
             filePath = "EthanToDoList-iOS/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1258"
-            endingLineNumber = "1258"
+            startingLineNumber = "1278"
+            endingLineNumber = "1278"
             landmarkName = "getAdjustedSleepTime(from:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "EthanToDoList-iOS/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1271"
-            endingLineNumber = "1271"
+            startingLineNumber = "1291"
+            endingLineNumber = "1291"
             landmarkName = "calculateDoubleSplit(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,9 +254,25 @@
             filePath = "EthanToDoList-iOS/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1279"
-            endingLineNumber = "1279"
+            startingLineNumber = "1299"
+            endingLineNumber = "1299"
             landmarkName = "calculateTripleSplit(_:_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3964AC2E-AFF8-4734-9C7F-6DDA2D98AB38"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EthanTodoList/TimerManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "stopTimer()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
