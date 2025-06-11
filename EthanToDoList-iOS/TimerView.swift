@@ -630,7 +630,7 @@ struct TimerView: View {
             }
             
             var fraction: Double = 1 / doubleDays
-            fraction *= (item.isForSchool ? 1 : 0.1)
+            fraction *= (item.isForSchool ? 2 : 1)
             
             var totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: rightNow, to: sleepTime).minute ?? 0) - offset - extra
             
@@ -698,7 +698,7 @@ struct TimerView: View {
             }
             
             var value: Double = 1 / doubleDays
-            value *= (item.isForSchool ? 1 : 0.1)
+            value *= (item.isForSchool ? 2 : 1)
             sum += value
         }
         

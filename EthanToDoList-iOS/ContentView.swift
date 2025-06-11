@@ -80,7 +80,7 @@ struct ContentView: View, ContentViewProtocol {
             // Tasks Tab
             NavigationStack {
                 taskListView
-                    .navigationTitle("Tasks")
+//                    .navigationTitle("Tasks")
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(action: {
@@ -162,6 +162,10 @@ struct ContentView: View, ContentViewProtocol {
     // MARK: - Task List View
     private var taskListView: some View {
         VStack {
+            Text("Tasks")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
             let notCompletedTasks = items.filter { !$0.isCompleted }
             let isDoneForTodayTasks = notCompletedTasks.filter { $0.isDoneForToday ?? false }
             
@@ -390,61 +394,61 @@ struct ContentView: View, ContentViewProtocol {
 //                Toggle("Is Tomorrow", isOn: $isTomorrow)
 //                    .padding(.vertical, 4)
 //                
-//                HStack {
-//                    Text("Offset")
-//                    
-//                    Spacer()
-//                    
-//                    VStack(spacing: 2) {
-//                        Button("+100") {
-//                            offset = min(offset + 100, 1440)
-//                        }
-//                        .buttonStyle(.plain)
-//                        .frame(width: 100)
-//                        .foregroundStyle(.blue)
-//                        
-//                        Button("+50") {
-//                            offset = min(offset + 50, 1440)
-//                        }
-//                        .buttonStyle(.plain)
-//                        .frame(width: 100)
-//                        .foregroundStyle(.blue)
-//                        
-//                        Button("0") {
-//                            offset = 0
-//                        }
-//                        .buttonStyle(.plain)
-//                        .frame(width: 100)
-//                        .foregroundStyle(.blue)
-//                        
-//                        Button("-50") {
-//                            offset = max(offset - 50, 0)
-//                        }
-//                        .buttonStyle(.plain)
-//                        .frame(width: 100)
-//                        .foregroundStyle(.blue)
-//                        
-//                        Button("-100") {
-//                            offset = max(offset - 100, 0)
-//                        }
-//                        .buttonStyle(.plain)
-//                        .frame(width: 100)
-//                        .foregroundStyle(.blue)
-//                    }
-//                    
-//                    Spacer()
-//                    
-//                    Picker("", selection: $offset) {
-//                        ForEach(0...1440, id: \.self) { value in
-//                            Text("\(value)").tag(value)
-//                        }
-//                    }
-//                    .pickerStyle(.wheel)
-//                    .frame(width: 80, height: 100)
-//                    .clipped()
-//                    .labelsHidden()
-//                }
-//                .padding(.vertical, 4)
+                HStack {
+                    Text("Offset")
+                    
+                    Spacer()
+                    
+                    VStack(spacing: 2) {
+                        Button("+100") {
+                            offset = min(offset + 100, 1440)
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 100)
+                        .foregroundStyle(.blue)
+                        
+                        Button("+50") {
+                            offset = min(offset + 50, 1440)
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 100)
+                        .foregroundStyle(.blue)
+                        
+                        Button("0") {
+                            offset = 0
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 100)
+                        .foregroundStyle(.blue)
+                        
+                        Button("-50") {
+                            offset = max(offset - 50, 0)
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 100)
+                        .foregroundStyle(.blue)
+                        
+                        Button("-100") {
+                            offset = max(offset - 100, 0)
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 100)
+                        .foregroundStyle(.blue)
+                    }
+                    
+                    Spacer()
+                    
+                    Picker("", selection: $offset) {
+                        ForEach(0...1440, id: \.self) { value in
+                            Text("\(value)").tag(value)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 80, height: 100)
+                    .clipped()
+                    .labelsHidden()
+                }
+                .padding(.vertical, 4)
             }
             
             
@@ -706,7 +710,7 @@ struct ContentView: View, ContentViewProtocol {
             }
             
             var value: Double = 1 / doubleDays
-            value *= (item.isForSchool ? 1 : 0.1)
+            value *= (item.isForSchool ? 2 : 1)
             sum += value
         }
         
@@ -822,7 +826,7 @@ struct ContentView: View, ContentViewProtocol {
             }
             
             var fraction: Double = 1 / doubleDays
-            fraction *= (item.isForSchool ? 1 : 0.1)
+            fraction *= (item.isForSchool ? 2 : 1)
             
             var totalWorkMinutes: Int = (Calendar.current.dateComponents([.minute], from: rightNow, to: sleepTime).minute ?? 0) - offset - extra
             
@@ -965,12 +969,61 @@ struct ContentView: View, ContentViewProtocol {
                 
                 // Quick Pomodoro Tip
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Pomodoro Technique")
-                        .font(.headline)
-                    
-                    Text("Work for 25 minutes, then take a 5 minute break. After 4 sessions, take a longer 15-30 minute break.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    HStack {
+                        Text("Offset")
+                        
+                        Spacer()
+                        
+                        VStack(spacing: 2) {
+                            Button("+100") {
+                                offset = min(offset + 100, 1440)
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 100)
+                            .foregroundStyle(.blue)
+                            
+                            Button("+50") {
+                                offset = min(offset + 50, 1440)
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 100)
+                            .foregroundStyle(.blue)
+                            
+                            Button("0") {
+                                offset = 0
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 100)
+                            .foregroundStyle(.blue)
+                            
+                            Button("-50") {
+                                offset = max(offset - 50, 0)
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 100)
+                            .foregroundStyle(.blue)
+                            
+                            Button("-100") {
+                                offset = max(offset - 100, 0)
+                            }
+                            .buttonStyle(.plain)
+                            .frame(width: 100)
+                            .foregroundStyle(.blue)
+                        }
+                        
+                        Spacer()
+                        
+                        Picker("", selection: $offset) {
+                            ForEach(0...1440, id: \.self) { value in
+                                Text("\(value)").tag(value)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(width: 80, height: 100)
+                        .clipped()
+                        .labelsHidden()
+                    }
+                    .padding(.vertical, 4)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
