@@ -626,7 +626,7 @@ struct TimerView: View {
             if days > 0 {
                 doubleDays = Double(days)
             } else {
-                doubleDays = 1 / (Double(days) + 2)
+                doubleDays = 1 / (-Double(days) + 2)
             }
             
             var fraction: Double = 1 / doubleDays
@@ -694,7 +694,7 @@ struct TimerView: View {
             if days > 0 {
                 doubleDays = Double(days)
             } else {
-                doubleDays = 1 / (Double(days) + 2)
+                doubleDays = 1 / (-Double(days) + 2)
             }
             
             var value: Double = 1 / doubleDays

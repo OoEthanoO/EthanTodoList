@@ -18,6 +18,7 @@ struct ItemView: View {
     @State private var isForSchool: Bool
     @State private var notes: String
     @State private var isCompleted: Bool
+    @State private var completedTime: String
     @FocusState private var isNameFieldFocused: Bool
     
     var items: [Item]
@@ -30,6 +31,7 @@ struct ItemView: View {
         self._isForSchool = State(initialValue: item.isForSchool)
         self._notes = State(initialValue: item.notes ?? "")
         self._isCompleted = State(initialValue: item.isCompleted)
+        self._completedTime = State(initialValue: "\(item.completedTime ?? 0)")
         self.items = items
         self.contentView = contentView
     }
@@ -124,6 +126,15 @@ struct ItemView: View {
                         .frame(height: 100)
                     
                     Toggle("For school", isOn: $isForSchool)
+                    
+                    HStack {
+                        Text("Completed Time (min)")
+                        Spacer()
+                        TextField("Minutes", text: $completedTime)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 80)
+                    }
                 }
                 .navigationTitle("Edit Task")
                 .toolbar {
@@ -135,6 +146,7 @@ struct ItemView: View {
                             dueDate = item.dueDate
                             isForSchool = item.isForSchool
                             notes = item.notes ?? ""
+                            completedTime = "\(item.completedTime ?? 0)"
                         }
                     }
                     
@@ -143,13 +155,14 @@ struct ItemView: View {
                             isEditing = false
                             item.name = name
                             item.isForSchool = isForSchool
+                            item.completedTime = Int(completedTime) ?? 0
                             item.notes = notes
                             item.dueDate = dueDate
                         }
                     }
                 }
             }
-            .presentationDetents([.medium])
+            .presentationDetents([.large])
         }
     }
     

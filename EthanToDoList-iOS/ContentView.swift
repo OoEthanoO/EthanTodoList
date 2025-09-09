@@ -35,6 +35,7 @@ struct ContentView: View, ContentViewProtocol {
     @State private var showSumAlert = false
     @State private var showInfoAlert = false
     @State private var nextTask = ""
+    @State private var sum = 0.0
     
     @State private var isCustomGameTime = false
     @State private var autoAdjust = false
@@ -207,13 +208,63 @@ struct ContentView: View, ContentViewProtocol {
             }
             
             // Add the Allocate button
-            Button(action: allocateTime) {
-                Label("Allocate Time", systemImage: "timer")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+            HStack(spacing: 12) {
+                Button(action: allocateTime) {
+                    Label("Allocate Time", systemImage: "timer")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal, 0)
+
+                Button(action: {
+                    let unfinishedItems = items.filter { !($0.isCompleted || ($0.isDoneForToday ?? false)) }
+                    // Calculate weights for each item
+                    var weights: [Item: Double] = [:]
+                    sum = 0
+                    for item in unfinishedItems {
+                        let dueDate = removeHours(from: item.dueDate)
+                        let days = (Calendar.current.dateComponents([.day], from: removeHours(from: Date()), to: dueDate).day ?? 0)
+                        let doubleDays: Double = days > 0 ? Double(days) : 1 / (-Double(days) + 2)
+                        var fraction: Double = 1 / doubleDays
+                        fraction *= (item.isForSchool ? 2 : 1)
+                        weights[item] = fraction
+                        print("Task: \(item.name), Weight: \(fraction)")
+                        sum += fraction
+                    }
+                    guard sum > 0 else { return }
+                    let randomValue = Double.random(in: 0..<sum)
+                    print("Random Value: \(randomValue), Total Sum: \(sum)")
+                    var cumulative: Double = 0
+                    var selectedTask: Item?
+                    for item in unfinishedItems {
+                        cumulative += weights[item] ?? 0
+                        if randomValue < cumulative {
+                            selectedTask = item
+                            break
+                        }
+                    }
+                    if let selectedTask = selectedTask {
+                        nextTask = selectedTask.name
+                        showRandomTaskAlert = true
+                    }
+                }) {
+                    Label("Random Task", systemImage: "questionmark.circle")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.purple)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .alert(isPresented: $showRandomTaskAlert) {
+                    Alert(
+                        title: Text("Random Task Selected"),
+                        message: Text(nextTask + "\nSum - \(sum)"),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
             }
             .padding(.horizontal)
             .padding(.bottom, 8)
@@ -706,7 +757,7 @@ struct ContentView: View, ContentViewProtocol {
             if days > 0 {
                 doubleDays = Double(days)
             } else {
-                doubleDays = 1 / (Double(days) + 2)
+                doubleDays = 1 / (-Double(days) + 2)
             }
             
             var value: Double = 1 / doubleDays
@@ -822,7 +873,7 @@ struct ContentView: View, ContentViewProtocol {
             if days > 0 {
                 doubleDays = Double(days)
             } else {
-                doubleDays = 1 / (Double(days) + 2)
+                doubleDays = 1 / (-Double(days) + 2)
             }
             
             var fraction: Double = 1 / doubleDays
